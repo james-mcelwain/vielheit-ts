@@ -1,19 +1,20 @@
 import { Request, Response, Next } from 'restify'
-import { InternalServerError } from 'restify-errors'
+import { InternalServerError, BadRequestError } from 'restify-errors'
 import { Post, Get, Controller } from 'inversify-restify-utils';
 import { injectable, inject } from 'inversify'
-import { IController, ILogger } from '../interfaces'
+import { IDatabase } from 'pg-promise'
+import { IController, ILogger, ILoggerFactory, IUserService } from '../interfaces'
 import { API_BASE } from '../config/app-constants'
 import __ from '../config/app-constants'
 
 @injectable()
 @Controller(`${API_BASE}/users`)
 class UsersController implements IController {
-  @inject(__.UserService) userService;
-  @inject(__.Database) db;
+  @inject(__.UserService) userService: IUserService;
+  @inject(__.Database) db: IDatabase;
   private logger: ILogger;
 
-  constructor( @inject(__.LoggerFactory) LoggerFactory) {
+  constructor( @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
     this.logger = LoggerFactory.getLogger(this)
   }
 
@@ -50,15 +51,21 @@ class UsersController implements IController {
     }
   }
 
+  @Validate
   @Post('/authenticate')
   private async authenticate(req: Request, res: Response, next: Next) {
-    const valid = await this.userService.authenticate(+req.body.id, req.body.password);
-    res.send(valid);
-    return next()
+    try {
+      const valid = await this.userService.authenticate(+req.body.id, req.body.password);
+      res.send(valid);
+      return next()
+    } catch (e) {
+      if (e.name === 'ValidationError') {
+        return next(new BadRequestError(e))
+      }
+
+      next(new InternalServerError(e))
+    }
   }
-
-
-
 }
 
 export default UsersController

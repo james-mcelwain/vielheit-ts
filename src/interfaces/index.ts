@@ -5,6 +5,8 @@ import IController from './controller'
 import IUserService from './user-service'
 import IDatabaseProvider from './database-provider'
 import ILoggerFactory from './logger-factory'
+import IReq from './req'
+import IRes from './res'
 
 export {
     IApp,
@@ -13,5 +15,7 @@ export {
     IController,
     IUserService,
     IDatabaseProvider,
-    ILoggerFactory
+    ILoggerFactory,
+    IReq,
+    IRes
 }

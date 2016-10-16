@@ -1,8 +1,8 @@
-import { createServer, Server, RequestHandler } from 'restify'
+import { createServer, Server, RequestHandler, Request, Response } from 'restify'
 import { InversifyRestifyServer, TYPE } from 'inversify-restify-utils'
 import kernel from '../config/di-config'
 import { inject, injectable } from 'inversify'
-import { ILogger } from '../interfaces'
+import { ILogger, ILoggerFactory, IReq, IRes } from '../interfaces'
 import __ from '../config/app-constants'
 import IHttpServer from '../interfaces/http-server'
 import { bodyParser } from 'restify'
@@ -12,8 +12,8 @@ import { v4 as uuid } from 'node-uuid'
 class HTTPServer implements IHttpServer {
     private server: Server;
     private port: number;
-    private router;
-    @inject(__.LoggerFactory) LoggerFactory;
+    private router: InversifyRestifyServer;
+    @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory;
     public logger: ILogger;
 
     public constructor(
@@ -50,7 +50,7 @@ class HTTPServer implements IHttpServer {
 
         this.server = this.router
             .setConfig((app) => {
-                app.use((req, res, next) => {
+                app.use((req: IReq, res: IRes, next: Function) => {
                     req.start = Date.now()
                     req.uuid = uuid()
                     this.logger.info(`| ${req.uuid} | method=${req.method} url=${req.url}`)
@@ -61,22 +61,22 @@ class HTTPServer implements IHttpServer {
             .build();
 
 
-        this.server.on('after', (req, res, route, err) => {
+        this.server.on('after', (req: IReq, res: IRes, route: string, err: Error) => {
             if (err) this.logger.error(err);
             this.logger.info(`| ${req.uuid} | url=${req.url} status=${res.statusCode} time=${Date.now() - req.start }`)
         });
 
-        this.server.on('uncaughtEception', (req, res, route, err) => {
+        this.server.on('uncaughtEception', (req: IReq, res: IRes, route: string, err: Error) => {
             this.logger.fatal(`route=${route}`, err);
             process.exit(1)
         });
 
-        this.server.on('unhandledRejection', (req, res, route, err) => {
+        this.server.on('unhandledRejection', (req: IReq, res: IRes, route: string, err: Error) => {
             this.logger.fatal(`route=${route}`, err);
             process.exit(1)
         });
 
-        this.server.on('InternalServer', (req, res, err, cb) => {
+        this.server.on('InternalServer', (req: IReq, res: IRes, err: Error, cb: Function) => {
             this.logger.error(err);
 
 
@@ -98,7 +98,7 @@ class HTTPServer implements IHttpServer {
         });
 
         this.server.on('BadRequest', (req: any, res: any, err: any, cb: Function) => {
-            this.logger.warn(`| ${req.uuid} | method=${req.method} url=${req.url} status=${400} error=${err}`);
+            this.logger.info(`| ${req.uuid} | method=${req.method} url=${req.url} status=${400} error=${err}`);
 
             if (err.jse_cause) {
                 res.end(JSON.stringify({ errors: err.js_cause.errors }))
@@ -107,6 +107,9 @@ class HTTPServer implements IHttpServer {
         });
 
         this.server.on('NotFound', (req: any, res: any, err: any, cb: Function) => {
+            req.uuid = uuid()
+            req.start = Date.now()
+            
             const page = `
             <h1>404</h1>
             `;
@@ -119,7 +122,7 @@ class HTTPServer implements IHttpServer {
         this.server.listen(this.port, () => this.logger.info(`${this.name} listening on ${this.port}`))
     }
 
-    public close(callback): void {
+    public close(callback: Function): void {
         this.server.close(callback)
     }
 }

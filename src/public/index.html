@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8" />
-    <title>Hello World!</title>
+    <head>
+        <meta charset="utf-8">
+        <title>Vielheit</title>
+        <script src="Main.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="styles.css">
+    </head>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css">
-
-</head>
-
-<body>
-    <div id="app"></div>
-
-    <!-- Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react-dom.min.js"></script>
-
-    <!-- Main -->
-    <script src="public/bundle.js"></script>
-</body>
-
-</html>
+    <body>
+    </body>
+    
+    <script>
+        var storedState = localStorage.getItem('model');
+        var startingState = storedState ? JSON.parse(storedState) : null;
+        var elmApp = Elm.Main.fullscreen(startingState);
+        elmApp.ports.setStorage.subscribe(function(state) {
+            localStorage.setItem('model', JSON.stringify(state));
+        });
+        elmApp.ports.removeStorage.subscribe(function() {
+            localStorage.removeItem('model');
+        });
+    </script>
+</html> 

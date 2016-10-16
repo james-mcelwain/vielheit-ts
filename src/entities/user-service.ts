@@ -2,15 +2,14 @@ import {IDatabase} from 'pg-promise'
 import {injectable, inject} from 'inversify'
 import {hash, compare} from 'bcrypt'
 import {Validator} from 'validator.ts/Validator'
-import {IsLength, IsEmail} from 'validator.ts/decorator/Validation'
+import {IsLength, IsEmail, IsNumeric} from 'validator.ts/decorator/Validation'
 import promisify from 'bluebird'
 
-import IUserService from '../interfaces/user-service'
-import ILogger from '../interfaces/logger'
+import { ILoggerFactory, ILogger, IUserService } from '../interfaces'
 import __ from '../config/app-constants'
 import {IExtensions} from '../db'
 
-
+const validator = new Validator();
 const SALT_WORK_FACTOR = 15;
 
 @injectable()
@@ -18,7 +17,7 @@ class UserService implements IUserService {
     @inject(__.Database) db: IDatabase<IExtensions>&IExtensions;
     private logger: ILogger;
 
-    constructor(@inject(__.LoggerFactory) LoggerFactory) {
+    constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
         this.logger = LoggerFactory.getLogger(this)
     }
 
@@ -35,8 +34,7 @@ class UserService implements IUserService {
         user.fname = req.fname;
         user.lname = req.lname;
 
-        const validator = new Validator();
-        const errors = validator.validateOrThrow(user);
+        validator.validateOrThrow(user);
 
         const emailExists = await this.db.users.findEmail(user.email);
         if (emailExists) {
@@ -59,14 +57,30 @@ class UserService implements IUserService {
     }
 
     public async authenticate(userId: number, password: string) {
+        const req = new ValidateUserReq()
+        req.id = userId
+        req.password = password
+        validator.validateOrThrow(req);    
+        
         const user = await this.db.users.find(userId);
         const passwordHash = user.password;
-        const candidateHash = await hash(password, SALT_WORK_FACTOR);
+        const candidateHash = await promisify(hash)(password, SALT_WORK_FACTOR);
         const valid = await promisify(compare)(candidateHash, passwordHash);
         this.logger.fatal(valid);
         return valid
     }
 
+}
+
+class ValidateUserReq {
+    @IsNumeric()
+    _id: string
+    set id(id: number) {
+        this._id = id + ''
+    }
+    
+    @IsLength(6, 20)
+    password: string
 }
 
 export interface IUser {
