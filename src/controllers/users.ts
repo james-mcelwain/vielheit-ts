@@ -1,11 +1,12 @@
-import { Request, Response, Next } from 'restify'
+import { Next } from 'restify'
 import { InternalServerError, BadRequestError } from 'restify-errors'
 import { Post, Get, Controller } from 'inversify-restify-utils';
 import { injectable, inject } from 'inversify'
 import { IDatabase } from 'pg-promise'
-import { IController, ILogger, ILoggerFactory, IUserService } from '../interfaces'
+import { IController, ILogger, ILoggerFactory, IUserService, IReq, IRes } from '../interfaces'
 import { API_BASE } from '../config/app-constants'
 import __ from '../config/app-constants'
+import Validate from '../validate'
 
 @injectable()
 @Controller(`${API_BASE}/users`)
@@ -19,7 +20,7 @@ class UsersController implements IController {
   }
 
   @Get('/create')
-  private async create(req: Request, res: Response, next: Next) {
+  private async create(req: IReq, res: IRes, next: Next) {
     try {
       await this.db.users.create();
       res.send(200);
@@ -30,7 +31,7 @@ class UsersController implements IController {
   }
 
   @Get('/init')
-  private async init(req: Request, res: Response, next: Next) {
+  private async init(req: IReq, res: IRes, next: Next) {
     try {
       await this.db.users.init();
       res.send(200);
@@ -41,7 +42,7 @@ class UsersController implements IController {
   }
 
   @Get('/empty')
-  private async empty(req: Request, res: Response, next: Next) {
+  private async empty(req: IReq, res: IRes, next: Next) {
     try {
       await this.db.users.empty();
       res.send(200);
@@ -53,18 +54,10 @@ class UsersController implements IController {
 
   @Validate
   @Post('/authenticate')
-  private async authenticate(req: Request, res: Response, next: Next) {
-    try {
-      const valid = await this.userService.authenticate(+req.body.id, req.body.password);
-      res.send(valid);
-      return next()
-    } catch (e) {
-      if (e.name === 'ValidationError') {
-        return next(new BadRequestError(e))
-      }
-
-      next(new InternalServerError(e))
-    }
+  private async authenticate(req: IReq, res: IRes, next: Next) {
+    const valid = await this.userService.authenticate(+req.body.id, req.body.password);
+    res.send(valid);
+    return next()
   }
 }
 

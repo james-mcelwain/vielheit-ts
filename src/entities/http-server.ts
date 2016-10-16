@@ -1,11 +1,10 @@
-import { createServer, Server, RequestHandler, Request, Response } from 'restify'
+import { createServer, Server, RequestHandler, CORS, bodyParser } from 'restify'
 import { InversifyRestifyServer, TYPE } from 'inversify-restify-utils'
 import kernel from '../config/di-config'
 import { inject, injectable } from 'inversify'
 import { ILogger, ILoggerFactory, IReq, IRes } from '../interfaces'
 import __ from '../config/app-constants'
 import IHttpServer from '../interfaces/http-server'
-import { bodyParser } from 'restify'
 import { v4 as uuid } from 'node-uuid'
 
 @injectable()
@@ -56,13 +55,15 @@ class HTTPServer implements IHttpServer {
                     this.logger.info(`| ${req.uuid} | method=${req.method} url=${req.url}`)
                     next()                    
                 })
+                
+                app.use(CORS())
                 app.use(bodyParser())
             })
             .build();
 
 
         this.server.on('after', (req: IReq, res: IRes, route: string, err: Error) => {
-            if (err) this.logger.error(err);
+            err && err.name !== 'BadRequestError' && this.logger.error(err);
             this.logger.info(`| ${req.uuid} | url=${req.url} status=${res.statusCode} time=${Date.now() - req.start }`)
         });
 
@@ -101,7 +102,7 @@ class HTTPServer implements IHttpServer {
             this.logger.info(`| ${req.uuid} | method=${req.method} url=${req.url} status=${400} error=${err}`);
 
             if (err.jse_cause) {
-                res.end(JSON.stringify({ errors: err.js_cause.errors }))
+                err.body.message = JSON.stringify({errors: err.jse_cause.errors})
             }
             cb()
         });

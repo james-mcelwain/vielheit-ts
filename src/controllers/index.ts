@@ -1,5 +1,5 @@
 import http from 'http'
-import { Request, Response, Next } from 'restify'
+import { Next } from 'restify'
 import { InternalServerError }  from 'restify-errors'
 import { Get, Controller } from 'inversify-restify-utils';
 import { injectable, inject } from 'inversify'
@@ -10,7 +10,7 @@ import { promisify } from 'bluebird'
 
 import IController from '../interfaces/controller'
 import __ from '../config/app-constants'
-import { ILogger } from '../interfaces'
+import { ILogger, IReq, IRes, ILoggerFactory } from '../interfaces'
 
 let rFile = promisify(readFile);
 
@@ -19,12 +19,12 @@ let rFile = promisify(readFile);
 class HomeController implements IController {
     private logger: ILogger;
 
-    constructor( @inject(__.LoggerFactory) LoggerFactory) {
+    constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
         this.logger = LoggerFactory.getLogger(this)
     }
 
     @Get('/')
-    private async index(req: Request, res: http.ServerResponse, next: Next) {
+    private async index(req: IReq, res: IRes, next: Next) {
         try {
             const index = await rFile(join('.', 'src/index.html'));
             res.writeHead(200);
@@ -36,7 +36,7 @@ class HomeController implements IController {
     }
 
     @Get('/public/bundle.js')
-    private async bundle(req: Request, res: http.ServerResponse, next: Next) {
+    private async bundle(req: IReq, res: IRes, next: Next) {
         try {
 
             const bundle = await rFile(join('.', 'dist/bundle.js'));
