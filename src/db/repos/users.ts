@@ -1,15 +1,13 @@
-import { IDatabase, IMain } from 'pg-promise'
+import {IDatabase, IMain} from 'pg-promise'
 import sqlProvider from '../sql'
 
-const sql = sqlProvider.users
+const sql = sqlProvider.users;
 
 export class Repository {
-    private db: IDatabase<any>
-    private pgp: IMain
+    private db: IDatabase<any>;
 
-    constructor(db: any, pgp: IMain) {
-        this.db = db
-        this.pgp = pgp
+    constructor(db: any) {
+        this.db = db;
     }
 
     public async create() {
@@ -39,12 +37,12 @@ export class Repository {
     public async find(id: number) {
         return this.db.oneOrNone('SELECT * FROM Users WHERE id = $1', id)
     }
-    
-    
+
+
     public async findEmail(email: String) {
         return this.db.oneOrNone('SELECT * FROM Users WHERE email $1', email)
     }
-    
+
     public async all() {
         return this.db.any('SELECT * FROM Users')
     }
@@ -52,8 +50,8 @@ export class Repository {
     public async total() {
         return this.db.one('SELECT count(*) FROM Users', [], (a: any) => +a.count)
     }
-    
-    public async updatePassword(password: string, id: number ) {
+
+    public async updatePassword(password: string, id: number) {
         return this.db.oneOrNone(sql.updatePassword, [password, id], (u: any) => u.id)
     }
 

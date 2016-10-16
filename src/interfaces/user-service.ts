@@ -1,6 +1,6 @@
 interface IUserService {
-    updatePassword: () => any,
-    authenticate: () => any   
+    updatePassword: (userId: number, oldPassword: string, newPassword: string) => any,
+    authenticate: (userId: number, password: string) => any
 }
 
 export default IUserService

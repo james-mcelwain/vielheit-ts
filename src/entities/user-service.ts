@@ -1,12 +1,15 @@
-import pgPromise, {IDatabase} from 'pg-promise'
-import {IExtensions} from '../db'
+import {IDatabase} from 'pg-promise'
 import {injectable, inject} from 'inversify'
+import {hash, compare} from 'bcrypt'
+import {Validator} from 'validator.ts/Validator'
+import {IsLength, IsEmail} from 'validator.ts/decorator/Validation'
+import promisify from 'bluebird'
+
 import IUserService from '../interfaces/user-service'
 import ILogger from '../interfaces/logger'
 import __ from '../config/app-constants'
-import {hash, compare} from 'bcrypt-then'
-import {Validator} from "validator.ts/Validator"
-import {IsLength, IsEmail} from "validator.ts/decorator/Validation"
+import {IExtensions} from '../db'
+
 
 const SALT_WORK_FACTOR = 15;
 
@@ -45,9 +48,9 @@ class UserService implements IUserService {
 
     public async updatePassword(userId: number, oldPassword: string, newPassword: string) {
         const user = await this.db.users.find(userId);
-        const passwordHash = user.psasword;
-        const candidateHash = await hash(oldPassword, SALT_WORK_FACTOR);
-        const valid = await compare(candidateHash, passwordHash);
+        const passwordHash = user.password;
+        const candidateHash = await promisify(hash)(oldPassword, SALT_WORK_FACTOR);
+        const valid = await  promisify(compare)(candidateHash, passwordHash);
         if (valid) {
             return this.db.users.updatePassword(newPassword, userId)
         }
@@ -59,8 +62,8 @@ class UserService implements IUserService {
         const user = await this.db.users.find(userId);
         const passwordHash = user.password;
         const candidateHash = await hash(password, SALT_WORK_FACTOR);
-        const valid = await compare(candidateHash, passwordHash);
-        this.logger.fatal(valid)
+        const valid = await promisify(compare)(candidateHash, passwordHash);
+        this.logger.fatal(valid);
         return valid
     }
 

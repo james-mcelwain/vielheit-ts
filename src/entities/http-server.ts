@@ -97,7 +97,7 @@ class HTTPServer implements IHttpServer {
             cb()
         });
 
-        this.server.on('BadRequest', (req, res, err, cb) => {
+        this.server.on('BadRequest', (req: any, res: any, err: any, cb: Function) => {
             this.logger.warn(`| ${req.uuid} | method=${req.method} url=${req.url} status=${400} error=${err}`);
 
             if (err.jse_cause) {
@@ -106,7 +106,7 @@ class HTTPServer implements IHttpServer {
             cb()
         });
 
-        this.server.on('NotFound', (req, res, err, cb) => {
+        this.server.on('NotFound', (req: any, res: any, err: any, cb: Function) => {
             const page = `
             <h1>404</h1>
             `;

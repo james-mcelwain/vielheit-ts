@@ -52,8 +52,8 @@ class UsersController implements IController {
 
   @Post('/authenticate')
   private async authenticate(req: Request, res: Response, next: Next) {
-    const valid = await this.userService.authenticate(+req.body.id, req.body.password)
-    res.send(valid)
+    const valid = await this.userService.authenticate(+req.body.id, req.body.password);
+    res.send(valid);
     return next()
   }
 

@@ -1,9 +1,9 @@
-import ILogger from './logger'
+import ILogger from './logger';
 
 interface IApp {
     logger: ILogger,
-    bootstrap(): any,
-    close(): any,
+    bootstrap(): Promise<any>,
+    close(): any;
 }
 
 export default IApp

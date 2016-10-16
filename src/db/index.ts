@@ -17,35 +17,25 @@ import IDatabaseProvider from '../interfaces/database-provider'
 
 @injectable()
 class DatabaseProvider implements IDatabaseProvider {
-
-    private static options: Object = {
-        promiseLib: promise,
-        extend: (obj: any) => {
-            obj.users = new UsersRepository(obj, DatabaseProvider.pgp)
-        }
-    };
-
-    private static config: Object = {
-        host: 'localhost',
-        port: 5432,
-        database: process.env.PG_DATABASE || 'vielheit',
-        user: process.env.PG_USER || 'postgres',
-        password: process.env.PG_PASSWORD || 'postgres'
-    };
-
-    private static pgp = pgPromise(DatabaseProvider.options);
-    private static pg = DatabaseProvider.pgp(DatabaseProvider.config);
-
-    private Postgres: pgPromise.IMain;
-    private db: pgPromise.IDatabase;
+    private db: pgPromise.IDatabase<IExtensions>&IExtensions;
 
     public constructor() {
         const options = {
             promiseLib: promise,
             extend: (obj: any) => {
-                obj.users = new UsersRepository(obj, this.Postgres)
+                obj.users = new UsersRepository(obj)
             }
-        }
+        };
+
+        const config: pgPromise.IConfig = {
+            host: 'localhost',
+            port: 5432,
+            database: process.env.PG_DATABASE || 'vielheit',
+            user: process.env.PG_USER || 'postgres',
+            password: process.env.PG_PASSWORD || 'postgres'
+        };
+
+        this.db = <IExtensions> pgPromise(options)(config);
     }
 
     public getDatabase() {

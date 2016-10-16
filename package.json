@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/axios": "^0.9.32",
+    "@types/bcrypt": "^0.0.30",
     "@types/bluebird": "^3.0.33",
     "@types/bunyan": "0.0.30",
     "@types/inversify-restify-utils": "^1.0.1",
@@ -20,7 +21,7 @@
     "@types/react-router": "^2.0.37",
     "@types/restify": "^2.0.32",
     "axios": "^0.14.0",
-    "bcrypt-then": "^1.1.0",
+    "bcrypt": "^0.8.7",
     "bluebird": "^3.4.6",
     "bunyan": "^1.8.1",
     "gently": "^0.10.0",

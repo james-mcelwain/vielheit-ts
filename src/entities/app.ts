@@ -1,18 +1,25 @@
 import {inject, injectable} from 'inversify'
-import {IApp, IHTTPServer, ILoggerFactory} from '../interfaces'
+import {IApp, IHTTPServer, ILoggerFactory, ILogger} from '../interfaces'
 import __ from '../config/app-constants'
+import {Logger} from "bunyan";
 
 
 @injectable()
 class App implements IApp {
     @inject(__.HTTPServer) httpServer: IHTTPServer;
-    @inject(__.LoggerFactory) loggerFactory: ILoggerFactory;
     @inject(__.UserService) userService;
 
-    public async bootstrap() {
-        this.loggerFactory.getLogger(this).info('starting services');
+    public logger: ILogger;
+
+    public constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
+        this.logger = LoggerFactory.getLogger(this);
+    }
+
+    public async bootstrap(): Promise<Boolean> {
+        this.logger.info('starting services');
         this.httpServer.onBootstrap(this.userService.onBootstrap.bind(this.userService));
-        this.httpServer.listen()
+        this.httpServer.listen();
+        return true
     }
 
     public close() {
