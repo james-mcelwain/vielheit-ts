@@ -4,10 +4,6 @@ import * as pgPromise from 'pg-promise'
 
 import {Repository as UsersRepository} from '../db/repos/users'
 
-declare const process = {
-    env: Object
-};
-
 export interface IExtensions {
     users: UsersRepository,
 }

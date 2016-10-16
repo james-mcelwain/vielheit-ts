@@ -26,7 +26,7 @@ export class Repository {
         return this.db.none(sql.empty)
     }
 
-    public async add(user) {
+    public async add(user: Object) {
         return this.db.one(sql.add, user, (u: any) => u.id)
     }
 

@@ -15,7 +15,7 @@ class LoggerFactory {
 
     private static config: LoggerOptions = LoggerFactory.makeDefaultConfig();
 
-    private static createLogger(name): ILogger {
+    private static createLogger(name: string): ILogger {
         if (!LoggerFactory.loggers[name]) {
             LoggerFactory.loggers[name] = <ILogger> createLogger(LoggerFactory.makeConfig(name, LoggerFactory.config))
         }
@@ -24,10 +24,6 @@ class LoggerFactory {
     }
 
     private static loggers: { [key: string]: ILogger } = {};
-
-    public static setOption(key: string, value: any) {
-        LoggerFactory.config[key] = value
-    }
 
     public static getLogger(name: Object): ILogger {
         return LoggerFactory.createLogger(name.constructor.toString().match(/class ([\w|_]+)/)[1])
