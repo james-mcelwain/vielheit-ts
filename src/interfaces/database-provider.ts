@@ -1,5 +1,7 @@
+import { IDatabase } from 'pg-promise'
+
 interface IDatabaseProvider {
-    getDatabase: () => any
+    getDatabase: () => IDatabase
 }
 
 export default IDatabaseProvider

@@ -1,0 +1,51 @@
+{
+  "name": "plugin-prototype",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node ./scripts/build-dist",
+    "start": "node scripts/run | ./node_modules/.bin/bunyan"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/axios": "^0.9.32",
+    "@types/bluebird": "^3.0.33",
+    "@types/bunyan": "0.0.30",
+    "@types/inversify-restify-utils": "^1.0.1",
+    "@types/pg-promise": "0.0.28",
+    "@types/react": "^0.14.38",
+    "@types/react-dom": "^0.14.17",
+    "@types/react-router": "^2.0.37",
+    "@types/restify": "^2.0.32",
+    "axios": "^0.14.0",
+    "bcrypt-then": "^1.1.0",
+    "bluebird": "^3.4.6",
+    "bunyan": "^1.8.1",
+    "gently": "^0.10.0",
+    "inversify": "^2.0.0",
+    "inversify-restify-utils": "^2.0.1",
+    "json-loader": "^0.5.4",
+    "mobx": "^2.5.2",
+    "mobx-react": "^3.5.7",
+    "pg-promise": "^5.3.4",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.8.1",
+    "redux": "^3.6.0",
+    "reflect-metadata": "^0.1.8",
+    "restify": "^4.1.1",
+    "restify-errors": "^4.3.0",
+    "source-map-support": "^0.4.3",
+    "typescript": "^2.0.3",
+    "validator.ts": "^0.2.2",
+    "webpack-node-externals": "^1.4.3"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.4",
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.8.2"
+  }
+}

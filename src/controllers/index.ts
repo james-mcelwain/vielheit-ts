@@ -1,15 +1,16 @@
+import http from 'http'
 import { Request, Response, Next } from 'restify'
 import { InternalServerError }  from 'restify-errors'
 import { Get, Controller } from 'inversify-restify-utils';
 import { injectable, inject } from 'inversify'
-import IController from '../interfaces/controller'
-import __ from '../config/app-constants'
-import { ILogger } from '../interfaces'
-
 import * as error from 'restify-errors'
 import { join } from 'path'
 import { readFile } from 'fs'
 import { promisify } from 'bluebird'
+
+import IController from '../interfaces/controller'
+import __ from '../config/app-constants'
+import { ILogger } from '../interfaces'
 
 let rFile = promisify(readFile);
 
@@ -23,9 +24,9 @@ class HomeController implements IController {
     }
 
     @Get('/')
-    private async index(req: Request, res: Response, next: Next) {
+    private async index(req: Request, res: http.ServerResponse, next: Next) {
         try {
-            const index = await rFile(join('.', 'src/server/public/index.html'));
+            const index = await rFile(join('.', 'src/index.html'));
             res.writeHead(200);
             res.end(index);
             next()
@@ -35,7 +36,7 @@ class HomeController implements IController {
     }
 
     @Get('/public/bundle.js')
-    private async bundle(req: Request, res: Response, next: Next) {
+    private async bundle(req: Request, res: http.ServerResponse, next: Next) {
         try {
 
             const bundle = await rFile(join('.', 'dist/bundle.js'));

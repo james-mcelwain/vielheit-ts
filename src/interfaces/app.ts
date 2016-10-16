@@ -1,6 +1,9 @@
+import ILogger from './logger'
+
 interface IApp {
-    bootstrap: () => any,
-    close: () => any,
+    logger: ILogger,
+    bootstrap(): any,
+    close(): any,
 }
 
 export default IApp

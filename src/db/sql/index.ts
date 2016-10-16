@@ -1,11 +1,9 @@
 import {QueryFile} from 'pg-promise'
 import * as path from 'path'
 
-declare var __dirname: string;
-
 export class SQL_Helper {
     public static readFile(file: string) {
-        const fullPath: string = path.join('../src/server/db/sql', file);
+        const fullPath: string = path.join('../src/db/sql', file);
 
         const options = {
             minify: true,
