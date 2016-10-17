@@ -8,6 +8,8 @@ import { API_BASE } from '../config/app-constants'
 import __ from '../config/app-constants'
 import Validate from '../validate'
 
+let self
+
 @injectable()
 @Controller(`${API_BASE}/users`)
 class UsersController implements IController {
@@ -15,8 +17,9 @@ class UsersController implements IController {
   @inject(__.Database) db: IDatabase;
   private logger: ILogger;
 
-  constructor( @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
+  constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
     this.logger = LoggerFactory.getLogger(this)
+    self = this
   }
 
   @Get('/create')
@@ -55,13 +58,12 @@ class UsersController implements IController {
   @Validate
   @Post('/authenticate')
   private async authenticate(req: IReq, res: IRes, next: Next) {
-    const user = await this.userService.findByEmail(req.body.email)
+    const user = await self.userService.findByEmail(req.body.email)
     if (!user) {
-      res.send(400, new BadRequestError('User does notexist'))
-      return next(false)
+      return next(new BadRequestError('User not found'))
     }
       
-    const valid = await this.userService.authenticate(req.body.email, req.body.password);
+    const valid = await this.userService.authenticate.bind(this)(req.body.password, user.password);
     res.send(valid);
     return next()
   }

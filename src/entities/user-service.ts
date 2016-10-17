@@ -30,7 +30,7 @@ class UserService implements IUserService {
     }
 
     public async findByEmail(email: string) {
-        return this.db.findEmail(email)
+        return this.db.users.findByEmail(email)
     }
 
     public async createUser(req: IUser) {
@@ -64,7 +64,7 @@ class UserService implements IUserService {
     }
 
     public async authenticate(candidate: string, passwordHash:string): Promise<boolean> {
-        const candidateHash = await hashAsync(candidate, SALT_WORK_FACTOR, null);
+        const candidateHash = await hashAsync(candidate, SALT_WORK_FACTOR);
         const valid = await compareAsync(candidateHash, passwordHash);
         this.logger.fatal(valid);
         return valid

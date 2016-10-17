@@ -63,7 +63,7 @@ class HTTPServer implements IHttpServer {
 
 
         this.server.on('after', (req: IReq, res: IRes, route: string, err: Error) => {
-            err && err.name !== 'BadRequestError' && this.logger.error(err);i
+            err && err.name !== 'BadRequestError' && this.logger.error(err);
             this.logger.info(`| ${req.uuid} | url=${req.url} status=${res.statusCode} time=${Date.now() - req.start }`)
         });
 
