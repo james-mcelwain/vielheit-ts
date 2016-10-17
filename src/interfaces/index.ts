@@ -7,6 +7,7 @@ import IDatabaseProvider from './database-provider'
 import ILoggerFactory from './logger-factory'
 import IReq from './req'
 import IRes from './res'
+import IUser from './user'
 
 export {
     IApp,
@@ -17,5 +18,6 @@ export {
     IDatabaseProvider,
     ILoggerFactory,
     IReq,
-    IRes
+    IRes,
+    IUser,
 }

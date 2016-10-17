@@ -10,16 +10,20 @@ export default function Valdiate(target: any, propertyKey: string, descriptor: T
   
   const method = descriptor.value
   
-  descriptor.value = function(...args: Array<any>) {
+  descriptor.value = (...args: Array<any>) => {
     const req = args[0];
     const next = args.pop();
   
     try {
       const validationRequest = getValidationRequest(ValidationClass, req);
       
-      const validator = new Validator()   
+      const validator = new Validator()
+      
+      for (let key in validationRequest) {
+        console.log(key, validationRequest[key])
+      }   
       validator.validateOrThrow(validationRequest);
-      method(...args)
+      method.bind(this, ...args)
     } catch (e) {
       if (e.name === 'ValidationError') {
         return next(new BadRequestError(e))
@@ -37,8 +41,10 @@ interface Newable {
 function getValidationRequest(Klass: Newable, req: IReq) { 
   const instance = new Klass();
   for (let key in req.body) {
-    const val = String(req.body[key])
-    Reflect.set(instance, key, val); 
+    const val = req.body[key]
+    if (val) {
+      Reflect.set(instance, key, String(val)); 
+    }
   }
 
   return instance

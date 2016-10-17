@@ -1,11 +1,11 @@
-import {IsLength, IsEmail, IsInt } from 'validator.ts/decorator/Validation'
+import {IsLength, IsEmail, } from 'validator.ts/decorator/Validation'
 
 class UsersController_authenticate {
-    @IsInt({ min: 0 })
-    id: string
-   
+    @IsEmail()
+    email: string = '' // TODO: It sucks to have to initialize these
+
     @IsLength(6, 20)
-    password: string
+    password: string = ''
 }
 
 const _validators = {

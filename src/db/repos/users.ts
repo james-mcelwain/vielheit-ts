@@ -38,9 +38,8 @@ export class Repository {
         return this.db.oneOrNone('SELECT * FROM Users WHERE id = $1', id)
     }
 
-
     public async findEmail(email: String) {
-        return this.db.oneOrNone('SELECT * FROM Users WHERE email $1', email)
+        return this.db.oneOrNone('SELECT * FROM Users WHERE email = $1', email)
     }
 
     public async all() {

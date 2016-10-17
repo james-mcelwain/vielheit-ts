@@ -63,7 +63,7 @@ class HTTPServer implements IHttpServer {
 
 
         this.server.on('after', (req: IReq, res: IRes, route: string, err: Error) => {
-            err && err.name !== 'BadRequestError' && this.logger.error(err);
+            err && err.name !== 'BadRequestError' && this.logger.error(err);i
             this.logger.info(`| ${req.uuid} | url=${req.url} status=${res.statusCode} time=${Date.now() - req.start }`)
         });
 
@@ -79,6 +79,7 @@ class HTTPServer implements IHttpServer {
 
         this.server.on('InternalServer', (req: IReq, res: IRes, err: Error, cb: Function) => {
             this.logger.error(err);
+            console.log(req.body)
 
 
             // TODO
@@ -99,8 +100,6 @@ class HTTPServer implements IHttpServer {
         });
 
         this.server.on('BadRequest', (req: any, res: any, err: any, cb: Function) => {
-            this.logger.info(`| ${req.uuid} | method=${req.method} url=${req.url} status=${400} error=${err}`);
-
             if (err.jse_cause) {
                 err.body.message = JSON.stringify({errors: err.jse_cause.errors})
             }

@@ -55,7 +55,13 @@ class UsersController implements IController {
   @Validate
   @Post('/authenticate')
   private async authenticate(req: IReq, res: IRes, next: Next) {
-    const valid = await this.userService.authenticate(+req.body.id, req.body.password);
+    const user = await this.userService.findByEmail(req.body.email)
+    if (!user) {
+      res.send(400, new BadRequestError('User does notexist'))
+      return next(false)
+    }
+      
+    const valid = await this.userService.authenticate(req.body.email, req.body.password);
     res.send(valid);
     return next()
   }
