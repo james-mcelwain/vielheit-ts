@@ -26,36 +26,38 @@ class UserService implements IUserService {
     
     public async onBootstrap() {
         this.logger.info('create users table');
-        return this.db.users.create()
+        return this.db.users.create();
     }
 
     public async findByEmail(email: string) {
-        return this.db.users.findByEmail(email)
+        return this.db.users.findByEmail(email);
     }
 
-    public async createUser(req: IUser) {
-        const user = new User();
-        user.username = req.username;
-        user.email = req.email;
-        user.password = req.password;
-        user.fname = req.fname;
-        user.lname = req.lname;
+    public async findById(id: number | string) {
+        return this.db.users.find(+id);
+    }
 
-        validator.validateOrThrow(user);
+    public async getAll() {
+        return this.db.users.all()
+    }
 
-        const emailExists = await this.db.users.findEmail(user.email);
+    public async add(req: IUser): Promise<number> {
+        const emailExists = await this.db.users.findByEmail(req.email);
         if (emailExists) {
             throw new Error('Email already exists')
         }
 
-        await this.db.users.add(user)
+        req.password = await hashAsync(req.password, SALT_WORK_FACTOR)
+
+        const id = await this.db.users.add(req)
+        return id
     }
 
     public async updatePassword(userId: number, oldPassword: string, newPassword: string) {
         const user = await this.db.users.find(userId);
         const passwordHash = user.password;
-        const candidateHash = await promisify(hash)(oldPassword, SALT_WORK_FACTOR);
-        const valid = await  promisify(compare)(candidateHash, passwordHash);
+        const candidateHash = await hashAsync(oldPassword, SALT_WORK_FACTOR);
+        const valid = await compareAsync(candidateHash, passwordHash);
         if (valid) {
             return this.db.users.updatePassword(newPassword, userId)
         }

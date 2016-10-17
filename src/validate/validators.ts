@@ -1,4 +1,5 @@
-import {IsLength, IsEmail, } from 'validator.ts/decorator/Validation'
+import {IsLength, IsEmail, IsInt} from 'validator.ts/decorator/Validation'
+import {IUser} from '../interfaces'
 
 class UsersController_authenticate {
     @IsEmail()
@@ -8,8 +9,27 @@ class UsersController_authenticate {
     password: string = ''
 }
 
+class UsersController_create implements IUser {
+  @IsLength(3, 20)
+  fname: string = ''
+
+  @IsLength(3, 20)
+  lname: string = ''
+
+  @IsLength(6, 20)
+  username: string = ''
+
+  @IsLength(6, 20)
+  password: string = ''
+
+  @IsEmail()
+  email: string = ''
+}
+
+
 const _validators = {
   UsersController_authenticate, 
+  UsersController_create,
 }
 
 const validators = new Proxy(_validators, {

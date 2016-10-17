@@ -484,28 +484,28 @@
 	            return this.db.users.findByEmail(email);
 	        });
 	    }
-	    createUser(req) {
+	    getAll() {
 	        return __awaiter(this, void 0, void 0, function* () {
-	            const user = new User();
-	            user.username = req.username;
-	            user.email = req.email;
-	            user.password = req.password;
-	            user.fname = req.fname;
-	            user.lname = req.lname;
-	            validator.validateOrThrow(user);
-	            const emailExists = yield this.db.users.findEmail(user.email);
+	            return this.db.users.all();
+	        });
+	    }
+	    add(req) {
+	        return __awaiter(this, void 0, void 0, function* () {
+	            const emailExists = yield this.db.users.findByEmail(req.email);
 	            if (emailExists) {
 	                throw new Error('Email already exists');
 	            }
-	            yield this.db.users.add(user);
+	            req.password = yield hashAsync(req.password, SALT_WORK_FACTOR);
+	            const user = yield this.db.users.add(req);
+	            return user;
 	        });
 	    }
 	    updatePassword(userId, oldPassword, newPassword) {
 	        return __awaiter(this, void 0, void 0, function* () {
 	            const user = yield this.db.users.find(userId);
 	            const passwordHash = user.password;
-	            const candidateHash = yield bluebird_1.promisify(bcrypt_1.hash)(oldPassword, SALT_WORK_FACTOR);
-	            const valid = yield bluebird_1.promisify(bcrypt_1.compare)(candidateHash, passwordHash);
+	            const candidateHash = yield hashAsync(oldPassword, SALT_WORK_FACTOR);
+	            const valid = yield compareAsync(candidateHash, passwordHash);
 	            if (valid) {
 	                return this.db.users.updatePassword(newPassword, userId);
 	            }
@@ -898,45 +898,17 @@
 	    constructor(LoggerFactory) {
 	        this.logger = LoggerFactory.getLogger(this);
 	    }
-	    test(req, res, next) {
+	    get(req, res, next) {
 	        return __awaiter(this, void 0, void 0, function* () {
-	            console.log('this', this);
+	            const users = yield this.userService.getAll();
+	            return users;
 	        });
 	    }
 	    create(req, res, next) {
 	        return __awaiter(this, void 0, void 0, function* () {
-	            try {
-	                yield this.db.users.create();
-	                res.send(200);
-	                return next();
-	            }
-	            catch (e) {
-	                next(new restify_errors_1.InternalServerError(e));
-	            }
-	        });
-	    }
-	    init(req, res, next) {
-	        return __awaiter(this, void 0, void 0, function* () {
-	            try {
-	                yield this.db.users.init();
-	                res.send(200);
-	                return next();
-	            }
-	            catch (e) {
-	                next(new restify_errors_1.InternalServerError(e));
-	            }
-	        });
-	    }
-	    empty(req, res, next) {
-	        return __awaiter(this, void 0, void 0, function* () {
-	            try {
-	                yield this.db.users.empty();
-	                res.send(200);
-	                return next();
-	            }
-	            catch (e) {
-	                next(new restify_errors_1.InternalServerError(e));
-	            }
+	            const user = yield this.userService.add(req.body);
+	            res.send(200, user);
+	            return next();
 	        });
 	    }
 	    authenticate(req, res, next) {
@@ -945,7 +917,7 @@
 	            if (!user) {
 	                return next(new restify_errors_1.BadRequestError('User not found'));
 	            }
-	            const valid = yield this.userService.authenticate.bind(this)(req.body.password, user.password);
+	            const valid = yield this.userService.authenticate(req.body.password, user.password);
 	            res.send(valid);
 	            return next();
 	        });
@@ -960,29 +932,18 @@
 	    __metadata('design:type', (typeof (_a = typeof pg_promise_1.IDatabase !== 'undefined' && pg_promise_1.IDatabase) === 'function' && _a) || Object)
 	], UsersController.prototype, "db", void 0);
 	__decorate([
-	    validate_1.default, 
+	    inversify_restify_utils_1.Get('/'), 
 	    __metadata('design:type', Function), 
 	    __metadata('design:paramtypes', [Object, Object, Function]), 
 	    __metadata('design:returntype', Promise)
-	], UsersController.prototype, "test", null);
+	], UsersController.prototype, "get", null);
 	__decorate([
-	    inversify_restify_utils_1.Get('/create'), 
+	    validate_1.default,
+	    inversify_restify_utils_1.Post('/add'), 
 	    __metadata('design:type', Function), 
 	    __metadata('design:paramtypes', [Object, Object, Function]), 
 	    __metadata('design:returntype', Promise)
 	], UsersController.prototype, "create", null);
-	__decorate([
-	    inversify_restify_utils_1.Get('/init'), 
-	    __metadata('design:type', Function), 
-	    __metadata('design:paramtypes', [Object, Object, Function]), 
-	    __metadata('design:returntype', Promise)
-	], UsersController.prototype, "init", null);
-	__decorate([
-	    inversify_restify_utils_1.Get('/empty'), 
-	    __metadata('design:type', Function), 
-	    __metadata('design:paramtypes', [Object, Object, Function]), 
-	    __metadata('design:returntype', Promise)
-	], UsersController.prototype, "empty", null);
 	__decorate([
 	    validate_1.default,
 	    inversify_restify_utils_1.Post('/authenticate'), 
@@ -1074,8 +1035,38 @@
 	    Validation_1.IsLength(6, 20), 
 	    __metadata('design:type', String)
 	], UsersController_authenticate.prototype, "password", void 0);
+	class UsersController_create {
+	    constructor() {
+	        this.fname = '';
+	        this.lname = '';
+	        this.username = '';
+	        this.password = '';
+	        this.email = '';
+	    }
+	}
+	__decorate([
+	    Validation_1.IsLength(3, 20), 
+	    __metadata('design:type', String)
+	], UsersController_create.prototype, "fname", void 0);
+	__decorate([
+	    Validation_1.IsLength(3, 20), 
+	    __metadata('design:type', String)
+	], UsersController_create.prototype, "lname", void 0);
+	__decorate([
+	    Validation_1.IsLength(6, 20), 
+	    __metadata('design:type', String)
+	], UsersController_create.prototype, "username", void 0);
+	__decorate([
+	    Validation_1.IsLength(6, 20), 
+	    __metadata('design:type', String)
+	], UsersController_create.prototype, "password", void 0);
+	__decorate([
+	    Validation_1.IsEmail(), 
+	    __metadata('design:type', String)
+	], UsersController_create.prototype, "email", void 0);
 	const _validators = {
 	    UsersController_authenticate,
+	    UsersController_create,
 	};
 	const validators = new Proxy(_validators, {
 	    get(target, name) {

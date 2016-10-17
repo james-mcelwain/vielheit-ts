@@ -3,7 +3,6 @@ import { InternalServerError, BadRequestError } from 'restify-errors'
 import { Post, Get, Controller } from 'inversify-restify-utils';
 import { injectable, inject } from 'inversify'
 import { IDatabase } from 'pg-promise'
-import { autobind } from 'core-decorators'
 
 import { IController, ILogger, ILoggerFactory, IUserService, IReq, IRes } from '../interfaces'
 import { API_BASE } from '../config/app-constants'
@@ -21,42 +20,19 @@ class UsersController implements IController {
     this.logger = LoggerFactory.getLogger(this)
   }
 
+  @Get('/')
+  private async get(req: IReq, res: IRes, next: Next) {
+    const users = await this.userService.getAll();
+    return users;
+  }
+
   @Validate
-  public async test(req: IReq, res: IRes, next: Next) {
-    console.log('this', this)
-  }
-
-  @Get('/create')
+  @Post('/add')
   private async create(req: IReq, res: IRes, next: Next) {
-    try {
-      await this.db.users.create();
-      res.send(200);
-      return next()
-    } catch (e) {
-      next(new InternalServerError(e))
-    }
-  }
-
-  @Get('/init')
-  private async init(req: IReq, res: IRes, next: Next) {
-    try {
-      await this.db.users.init();
-      res.send(200);
-      return next()
-    } catch (e) {
-      next(new InternalServerError(e))
-    }
-  }
-
-  @Get('/empty')
-  private async empty(req: IReq, res: IRes, next: Next) {
-    try {
-      await this.db.users.empty();
-      res.send(200);
-      return next()
-    } catch (e) {
-      next(new InternalServerError(e))
-    }
+    const id = await this.userService.add(req.body);
+    const user = await this.userService.findById(id);
+    res.send(200, user);
+    return next()
   }
 
   @Validate
@@ -67,7 +43,7 @@ class UsersController implements IController {
       return next(new BadRequestError('User not found'))
     }
       
-    const valid = await this.userService.authenticate.bind(this)(req.body.password, user.password);
+    const valid = await this.userService.authenticate(req.body.password, user.password);
     res.send(valid);
     return next()
   }
