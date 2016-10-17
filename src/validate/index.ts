@@ -8,9 +8,9 @@ export default function Valdiate(target: any, propertyKey: string, descriptor: T
   const validatorName = `${target.constructor.toString().match(/class ([\w|_]+)/)[1]}_${propertyKey}`;
   const ValidationClass = Reflect.get(validators, validatorName);
   
-  const method = descriptor.value.bind(descriptor.value)
-
-  descriptor.value = (...args: Array<any>) => {
+  const method = descriptor.value
+  
+  descriptor.value = function(...args: Array<any>) {
     const req = args[0];
     const next = args[args.length - 1];
   
@@ -18,8 +18,7 @@ export default function Valdiate(target: any, propertyKey: string, descriptor: T
       const validationRequest = getValidationRequest(ValidationClass, req);
       const validator = new Validator()
       validator.validateOrThrow(validationRequest);
-      console.log('this', this)
-      method.apply(this, args)
+      method.call(this, ...args)
     } catch (e) {
       if (e.name === 'ValidationError') {
         return next(new BadRequestError(e))

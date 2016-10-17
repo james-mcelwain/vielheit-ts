@@ -3,12 +3,12 @@ import { InternalServerError, BadRequestError } from 'restify-errors'
 import { Post, Get, Controller } from 'inversify-restify-utils';
 import { injectable, inject } from 'inversify'
 import { IDatabase } from 'pg-promise'
+import { autobind } from 'core-decorators'
+
 import { IController, ILogger, ILoggerFactory, IUserService, IReq, IRes } from '../interfaces'
 import { API_BASE } from '../config/app-constants'
 import __ from '../config/app-constants'
 import Validate from '../validate'
-
-let self
 
 @injectable()
 @Controller(`${API_BASE}/users`)
@@ -19,7 +19,11 @@ class UsersController implements IController {
 
   constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
     this.logger = LoggerFactory.getLogger(this)
-    self = this
+  }
+
+  @Validate
+  public async test(req: IReq, res: IRes, next: Next) {
+    console.log('this', this)
   }
 
   @Get('/create')
@@ -58,7 +62,7 @@ class UsersController implements IController {
   @Validate
   @Post('/authenticate')
   private async authenticate(req: IReq, res: IRes, next: Next) {
-    const user = await self.userService.findByEmail(req.body.email)
+    const user = await this.userService.findByEmail(req.body.email)
     if (!user) {
       return next(new BadRequestError('User not found'))
     }

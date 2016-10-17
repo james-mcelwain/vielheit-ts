@@ -18,6 +18,10 @@
   dependencies:
     "@types/node" "*"
 
+"@types/core-decorators":
+  version "0.10.30"
+  resolved "https://registry.yarnpkg.com/@types/core-decorators/-/core-decorators-0.10.30.tgz#bb45d610824f5ccb99dbe19f27138a6a4ff231f2"
+
 "@types/inversify-restify-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/inversify-restify-utils/-/inversify-restify-utils-1.0.1.tgz#878ce8d8373f230b11786e19af42bf40f5d74a55"
@@ -158,6 +162,10 @@ colors@^1.0.3:
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
+
+core-decorators:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/core-decorators/-/core-decorators-0.13.0.tgz#8d1643d9d69983b4b8290bae57f262cc0e71a7bf"
 
 core-js@^1.0.0:
   version "1.2.7"
