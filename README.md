@@ -3,14 +3,15 @@
        	   /\__\     /\  \     /\  \     /\__\          Learning Notes:
        	  /:/ _/_   _\:\  \   /::\  \   /:/  /          ---------------
        	 |::L/\__\ /\/::\__\ /::\:\__\ /:/__/
-       	 |::::/  / \::/\/__/ \:\:\/  / \:\  \           1. Inversify is suprisingly stable, despite lacking the runtime
-       	  L;;/__/   \:\__\    \:\/  /   \:\__\             information to do reflection "properly." In such a small
-       	             \/__/     \/__/     \/__/             project, it's hard to tell the advantage programming to
-       	    ___       ___       ___       ___              injected interfaces over just creating thin concrete api
-       	   /\__\     /\  \     /\  \     /\  \             layers over things like db, cache, etc.
-       	  /:/__/_   /::\  \   _\:\  \    \:\  \
-       	 /::\/\__\ /::\:\__\ /\/::\__\   /::\__\        2. Async await is *glorious* if you're going to program in this
-       	 \/\::/  / \:\:\/  / \::/\/__/  /:/\/__/           style in JavaScript. Organizing things in classes makes it
+       	 |::::/  / \::/\/__/ \:\:\/  / \:\  \           1. Inversify is suprisingly stable, despite lacking 
+       	  L;;/__/   \:\__\    \:\/  /   \:\__\             the runtime information to do reflection "properly." 
+       	             \/__/     \/__/     \/__/             In such a small project, it's hard to tell the 
+       	    ___       ___       ___       ___              advantage programming to injecting interfaces 
+       	   /\__\     /\  \     /\  \     /\  \             lover just creating thin hard coded abstraction over 
+       	  /:/__/_   /::\  \   _\:\  \    \:\  \            things like db, cache, etc.
+       	 /::\/\__\ /::\:\__\ /\/::\__\   /::\__\ 
+                                                        2. Async await is *glorious* if you're going to program 
+       	 \/\::/  / \:\:\/  / \::/\/__/  /:/\/__/           in this style in JavaScript. Organizing things in 
        	   /:/  /   \:\/  /   \:\__\    \/__/              easier to layer things logically as opposed to having logic
        	   \/__/     \/__/     \/__/                       tied up in the actual REST endpoint.
        	________________________________________

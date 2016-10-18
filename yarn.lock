@@ -51,10 +51,6 @@
   version "6.0.45"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.45.tgz#c4842a9d653d767831e4ff495b6008cc0d579966"
 
-"@types/pg-promise@0.0.28":
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/@types/pg-promise/-/pg-promise-0.0.28.tgz#11737c4d95ddd0553b9bb2dbcb1feefbcc985d76"
-
 "@types/react-dom@^0.14.17":
   version "0.14.18"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-0.14.18.tgz#af4fb4092f433667f5f094e762b32c294e0010dc"
