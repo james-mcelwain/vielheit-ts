@@ -8,7 +8,7 @@ import {
     ISessionService, ILogger, ILoggerFactory,
     ICacheService, IUser
 } from '../interfaces'
-import __ from '../config/app-constants'
+import __ from '../config/constants'
 
 const KEY_FILE = path.resolve(process.cwd(), 'keys')
 

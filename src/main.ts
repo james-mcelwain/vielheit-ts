@@ -1,6 +1,6 @@
-import kernel from './config/di-config'
+import kernel from './config/index'
 import IApp from './interfaces/app'
-import __ from './config/app-constants'
+import __ from './config/constants'
 
 
 const title =

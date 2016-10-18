@@ -9,7 +9,7 @@ import {
     ILoggerFactory, ILogger, IUserService,
     IUser, ISessionService
 } from '../interfaces'
-import __ from '../config/app-constants'
+import __ from '../config/constants'
 import { IExtensions } from '../db'
 
 const validator = new Validator();

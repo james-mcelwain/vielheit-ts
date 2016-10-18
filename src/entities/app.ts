@@ -3,7 +3,7 @@ import {
     IApp, IHTTPServer, ILoggerFactory, ILogger,
     IUserService, ICacheService
 } from '../interfaces'
-import __ from '../config/app-constants'
+import __ from '../config/constants'
 import { Logger } from "bunyan";
 
 

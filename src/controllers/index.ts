@@ -9,7 +9,7 @@ import { readFile } from 'fs'
 import { promisify } from 'bluebird'
 
 import IController from '../interfaces/controller'
-import __ from '../config/app-constants'
+import __ from '../config/constants'
 import { ILogger, IReq, IRes, ILoggerFactory } from '../interfaces'
 
 let rFile = promisify(readFile);

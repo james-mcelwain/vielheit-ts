@@ -5,8 +5,8 @@ import { injectable, inject } from 'inversify'
 import { IDatabase } from 'pg-promise'
 
 import { IController, ILogger, ILoggerFactory, IUserService, IReq, IRes } from '../interfaces'
-import { API_BASE } from '../config/app-constants'
-import __ from '../config/app-constants'
+import { API_BASE } from '../config/constants'
+import __ from '../config/constants'
 import Validate from '../validate'
 
 @injectable()

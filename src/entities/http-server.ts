@@ -1,9 +1,9 @@
 import { createServer, Server, RequestHandler, CORS, bodyParser } from 'restify'
 import { InversifyRestifyServer, TYPE } from 'inversify-restify-utils'
-import kernel from '../config/di-config'
+import kernel from '../config/index'
 import { inject, injectable } from 'inversify'
 import { ILogger, ILoggerFactory, IReq, IRes } from '../interfaces'
-import __ from '../config/app-constants'
+import __ from '../config/constants'
 import IHttpServer from '../interfaces/http-server'
 import { v4 as uuid } from 'node-uuid'
 

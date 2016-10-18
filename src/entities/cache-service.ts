@@ -3,7 +3,7 @@ import { createClient, RedisClient } from 'redis'
 import { promisify } from 'bluebird'
 
 import { ICacheService, ILoggerFactory, ILogger } from '../interfaces'
-import __ from '../config/app-constants'
+import __ from '../config/constants'
 
 @injectable()
 class CacheService implements ICacheService {
