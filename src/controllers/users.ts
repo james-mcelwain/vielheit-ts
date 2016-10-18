@@ -50,8 +50,8 @@ class UsersController implements IController {
             return next(new BadRequestError('User not found'))
         }
 
-        const valid = await this.userService.authenticate(req.body.password, user.password);
-        res.send(valid);
+        const session = await this.userService.authenticate(req.body.password, user);
+        res.send(session);
         return next()
     }
 }

@@ -41,6 +41,12 @@
   dependencies:
     "@types/node" "*"
 
+"@types/node-uuid":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@types/node-uuid/-/node-uuid-0.0.28.tgz#41655b5ce63b2f3374c4e826b4dd21e729058e3d"
+  dependencies:
+    "@types/node" "*"
+
 "@types/node@*":
   version "6.0.45"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.45.tgz#c4842a9d653d767831e4ff495b6008cc0d579966"

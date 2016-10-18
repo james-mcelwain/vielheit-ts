@@ -69,17 +69,15 @@ class UserService implements IUserService {
         return Promise.reject(new Error())
     }
 
-    public async authenticate(candidate: string, passwordHash: string): Promise<boolean> {
-        const valid = await compareAsync(candidate, passwordHash);
-        const ok = await this.session.getSession();
-        this.logger.fatal(valid);
-        return valid
+    public async authenticate(candidate: string, user: IUser): Promise<string> {
+        const auth = await compareAsync(candidate, user.password);
+        const session = await this.session.setSession(user)
+        return session
     }
 
     public async empty() {
         return this.db.users.empty()
     }
-
 }
 
 class ValidateUserReq {

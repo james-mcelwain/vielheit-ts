@@ -39,7 +39,7 @@ class SessionService implements ISessionService {
         })
     }
 
-    public async setSession(user: IUser) {
+    public async setSession(user: IUser): Promise<string> {
         const sessionId = uuid()
         const token = sign({ ['session-id']: sessionId }, PRIVATE_KEY, { algorithm: 'RS256' })
         await this.cache.set(sessionId, JSON.stringify(user))

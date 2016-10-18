@@ -87,7 +87,6 @@ class HTTPServer implements IHttpServer {
             <h1>sorry, this is broken right now... try again later?</h1>
 
             ${true ? `<div style="background: #feeeee">
-                <pre>${err}</pre>
                 <pre>${err.stack}</pre>
               </div>` : ''}
             `;
