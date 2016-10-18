@@ -14,3 +14,7 @@
        	   /:/  /   \:\/  /   \:\__\    \/__/
        	   \/__/     \/__/     \/__/
        	________________________________________
+
+              A Restify server written in Typescript
+              using Inversify to make things *just* a
+              bit over-engineered.
