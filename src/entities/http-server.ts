@@ -48,15 +48,15 @@ class HTTPServer implements IHttpServer {
         });
 
         this.server = this.router
-            .setConfig((app) => {
+            .setConfig((app: Server) => {
                 app.pre((req: IReq, res: IRes, next: Function) => {
-                    req.start = Date.now()
-                    req.uuid = uuid()
-                    this.logger.info(`| ${req.uuid} | method=${req.method} url=${req.url}`)
+                    req.start = Date.now();
+                    req.uuid = uuid();
+                    this.logger.info(`${this.logger['format'](req)} method=${req.method} url=${req.url}`);
                     next()                    
-                })
+                });
                 
-                app.use(CORS())
+                app.use(CORS());
                 app.use(bodyParser())
             })
             .build();
@@ -64,7 +64,7 @@ class HTTPServer implements IHttpServer {
 
         this.server.on('after', (req: IReq, res: IRes, route: string, err: Error) => {
             err && err.name !== 'BadRequestError' && this.logger.error(err);
-            this.logger.info(`| ${req.uuid} | url=${req.url} status=${res.statusCode} time=${Date.now() - req.start }`)
+            this.logger.info(`${this.logger['format'](req)} status=${res.statusCode} time=${Date.now() - req.start }`)
         });
 
         this.server.on('uncaughtEception', (req: IReq, res: IRes, route: string, err: Error) => {

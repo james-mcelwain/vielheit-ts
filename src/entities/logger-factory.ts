@@ -17,7 +17,11 @@ class LoggerFactory {
 
     private static createLogger(name: string): ILogger {
         if (!LoggerFactory.loggers[name]) {
-            LoggerFactory.loggers[name] = <ILogger> createLogger(LoggerFactory.makeConfig(name, LoggerFactory.config))
+            const logger: ILogger = createLogger(LoggerFactory.makeConfig(name, LoggerFactory.config));
+            logger['format'] = (req: any) => {
+              return `req=${req.uuid}${req.session ? ` session=${req.session}` : ''}`
+            };
+            LoggerFactory.loggers[name] = logger;
         }
 
         return LoggerFactory.loggers[name]
