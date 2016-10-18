@@ -46,6 +46,7 @@ class CacheService implements ICacheService {
     }
 
     public async set(key: string, value: string) {
+        const time = Date.now()
         return new Promise((resolve, reject) => {
             this.client.set(key, value, (err, value) => {
                 if (err) {
@@ -53,6 +54,7 @@ class CacheService implements ICacheService {
                     return
                 }
 
+                this.logger.info(`key=${key} time=${Date.now() - time}`)
                 resolve(value)
             })
         })

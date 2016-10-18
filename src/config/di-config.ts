@@ -66,7 +66,7 @@ kernel
 kernel
 .bind<ICacheService>(__.CacheService)
     .to(CacheService)
-    .inSingletonScope;
+    .inSingletonScope();
 
 // ROUTES
 

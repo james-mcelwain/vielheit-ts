@@ -6,7 +6,7 @@ import { v4 as uuid } from 'node-uuid'
 
 import {
     ISessionService, ILogger, ILoggerFactory,
-    ICacheService, IUser, IUserService
+    ICacheService, IUser
 } from '../interfaces'
 import __ from '../config/app-constants'
 
@@ -19,7 +19,6 @@ const PUBLIC_KEY = readFileSync(`${KEY_FILE}/pubkey.pem`)
 @injectable()
 class SessionService implements ISessionService {
     @inject(__.CacheService) cache: ICacheService;
-    @inject(__.UserService) userService: IUserService;
     private logger: ILogger
 
     public constructor( @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {

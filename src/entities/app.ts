@@ -15,7 +15,7 @@ class App implements IApp {
 
     public logger: ILogger;
 
-    public constructor( @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
+    public constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
         this.logger = LoggerFactory.getLogger(this);
     }
 
