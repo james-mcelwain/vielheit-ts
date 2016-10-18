@@ -1,29 +1,33 @@
-import {IDatabase} from 'pg-promise'
-import {injectable, inject} from 'inversify'
-import {hash, compare} from 'bcrypt'
-import {Validator} from 'validator.ts/Validator'
-import {IsLength, IsEmail, IsNumeric} from 'validator.ts/decorator/Validation'
+import { IDatabase } from 'pg-promise'
+import { injectable, inject } from 'inversify'
+import { hash, compare } from 'bcrypt'
+import { Validator } from 'validator.ts/Validator'
+import { IsLength, IsEmail, IsNumeric } from 'validator.ts/decorator/Validation'
 import { promisify } from 'bluebird'
 
-import { ILoggerFactory, ILogger, IUserService, IUser } from '../interfaces'
+import {
+    ILoggerFactory, ILogger, IUserService,
+    IUser, ISessionService
+} from '../interfaces'
 import __ from '../config/app-constants'
-import {IExtensions} from '../db'
+import { IExtensions } from '../db'
 
 const validator = new Validator();
-const SALT_WORK_FACTOR = 15;
+const SALT_WORK_FACTOR = 10;
 const hashAsync = promisify(hash)
 const compareAsync = promisify(compare)
 
 
 @injectable()
 class UserService implements IUserService {
-    @inject(__.Database) db: IDatabase<IExtensions>&IExtensions;
+    @inject(__.Database) db: IDatabase<IExtensions> & IExtensions;
+    @inject(__.SessionService) session: ISessionService;
     private logger: ILogger;
 
-    constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
+    public constructor( @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
         this.logger = LoggerFactory.getLogger(this)
     }
-    
+
     public async onBootstrap() {
         this.logger.info('create users table');
         return this.db.users.create();
@@ -65,11 +69,15 @@ class UserService implements IUserService {
         return Promise.reject(new Error())
     }
 
-    public async authenticate(candidate: string, passwordHash:string): Promise<boolean> {
-        const candidateHash = await hashAsync(candidate, SALT_WORK_FACTOR);
-        const valid = await compareAsync(candidateHash, passwordHash);
+    public async authenticate(candidate: string, passwordHash: string): Promise<boolean> {
+        const valid = await compareAsync(candidate, passwordHash);
+        const ok = await this.session.getSession();
         this.logger.fatal(valid);
         return valid
+    }
+
+    public async empty() {
+        return this.db.users.empty()
     }
 
 }
@@ -80,7 +88,7 @@ class ValidateUserReq {
     set id(id: number) {
         this._id = id + ''
     }
-    
+
     @IsLength(6, 20)
     password: string
 }

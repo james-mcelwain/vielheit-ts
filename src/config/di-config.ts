@@ -1,8 +1,10 @@
 import 'reflect-metadata'
 import {Kernel} from 'inversify'
 import __ from './app-constants'
-import {IApp, IHTTPServer, IUserService, IDatabaseProvider } from '../interfaces'
-import {App, HTTPServer, LoggerFactory, UserService } from '../entities'
+import {IApp, IHTTPServer, IUserService, IDatabaseProvider, 
+    ISessionService, ICacheService } from '../interfaces'
+import {App, HTTPServer, LoggerFactory, UserService, 
+    SessionService, CacheService } from '../entities'
 import DatabaseProvider from '../db'
 import {IDatabase} from 'pg-promise'
 import {TYPE} from 'inversify-restify-utils';
@@ -53,6 +55,18 @@ kernel
     .bind<IUserService>(__.UserService)
     .to(UserService)
     .inSingletonScope();
+
+// SessionService -
+kernel
+    .bind<ISessionService>(__.SessionService)
+    .to(SessionService)
+    .inSingletonScope();
+    
+// CacheService -
+kernel
+.bind<ICacheService>(__.CacheService)
+    .to(CacheService)
+    .inSingletonScope;
 
 // ROUTES
 

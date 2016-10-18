@@ -7,6 +7,8 @@ interface IUserService {
     authenticate: (candidate: string, passwordHash:string) => Promise<boolean>
     findByEmail: (email: string) => Promise<IUser>
     findById: (id: string | number) => Promise<IUser>
+    empty: () => any
+    onBootstrap: () => any
 }
 
 export default IUserService

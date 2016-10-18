@@ -11,8 +11,10 @@ const __ = {
     Router: Symbol('Router'),
     
     UserService: Symbol('UserService'),
+    SessionService: Symbol('SessionService'),
+    CacheService: Symbol('CacheService'),
 };
 
 export const API_BASE = '/api/';
 
- export default __
+export default __

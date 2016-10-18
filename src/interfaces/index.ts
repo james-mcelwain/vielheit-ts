@@ -8,6 +8,8 @@ import ILoggerFactory from './logger-factory'
 import IReq from './req'
 import IRes from './res'
 import IUser from './user'
+import ISessionService from './session-service'
+import ICacheService from './cache-service'
 
 export {
     IApp,
@@ -20,4 +22,6 @@ export {
     IReq,
     IRes,
     IUser,
+    ISessionService,
+    ICacheService,
 }
