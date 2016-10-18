@@ -26,5 +26,6 @@ export default {
         add: SQL_Helper.readFile('users/add.sql'),
         updatePassword: SQL_Helper.readFile('users/update-password'),
         createUsersView: SQL_Helper.readFile('users/users-view.sql'),
+        remove: SQL_Helper.readFile('users/remove.sql'),
     },
 }

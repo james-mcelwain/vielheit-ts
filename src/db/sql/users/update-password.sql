@@ -1,4 +1,4 @@
 UPDATE ${schem~}.Users
 SET password = $1
-WHEERE id = $2
+WHERE id = $2
 RETURNING id;

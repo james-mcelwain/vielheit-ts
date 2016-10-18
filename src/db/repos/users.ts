@@ -1,8 +1,6 @@
-import {IDatabase, IMain} from 'pg-promise'
+import {IDatabase} from 'pg-promise'
 
 import sqlProvider from '../sql'
-import {} from '../sql/'
-import {IUser} from '../../interfaces'
 
 const sql = sqlProvider.users;
 
@@ -38,7 +36,7 @@ export class Repository {
     }
 
     public async remove(id: number) {
-        return this.db.result('DELETE FROM Users WHERE ID = $1', id, (r: any) => r.rowcount)
+        return this.db.result(sql.remove, id, (r: any) => r.rowcount)
     }
 
     public async find(id: number) {

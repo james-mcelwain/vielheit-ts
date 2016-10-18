@@ -79,8 +79,6 @@ class HTTPServer implements IHttpServer {
 
         this.server.on('InternalServer', (req: IReq, res: IRes, err: Error, cb: Function) => {
             this.logger.error(err);
-            console.log(req.body)
-
 
             // TODO
             const page = `

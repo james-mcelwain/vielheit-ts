@@ -1,7 +1,7 @@
 import IUser from './user'
 
 interface IUserService {
-    getAll: () => Promise<Array<IUser>>
+    getAll: () => any
     add: (req: IUser) => Promise<number>
     updatePassword: (userId: number, oldPassword: string, newPassword: string) => any
     authenticate: (candidate: string, user: IUser) => Promise<string>
