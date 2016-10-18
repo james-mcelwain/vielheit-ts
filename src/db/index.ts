@@ -8,6 +8,9 @@ export interface IExtensions {
     users: UsersRepository,
 }
 
+declare type process = {
+    env: any
+}
 
 import IDatabaseProvider from '../interfaces/database-provider'
 
@@ -23,7 +26,7 @@ class DatabaseProvider implements IDatabaseProvider {
             }
         };
 
-        const config: pgPromise.IConfig = {
+        const config = {
             host: 'localhost',
             port: 5432,
             database: process.env.PG_DATABASE || 'vielheit',
@@ -31,7 +34,8 @@ class DatabaseProvider implements IDatabaseProvider {
             password: process.env.PG_PASSWORD || 'postgres'
         };
 
-        this.db = <IExtensions> pgPromise(options)(config);
+        const pgp: pgPromise.IMain = pgPromise<IExtensions>(options);
+        this.db = <pgPromise.IDatabase<IExtensions>&IExtensions> pgp(config); // gross type cast
     }
 
     public getDatabase() {

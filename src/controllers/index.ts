@@ -1,9 +1,7 @@
-import http from 'http'
 import { Next } from 'restify'
 import { InternalServerError }  from 'restify-errors'
 import { Get, Controller } from 'inversify-restify-utils';
 import { injectable, inject } from 'inversify'
-import * as error from 'restify-errors'
 import { join } from 'path'
 import { readFile } from 'fs'
 import { promisify } from 'bluebird'

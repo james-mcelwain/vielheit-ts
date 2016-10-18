@@ -1,22 +1,24 @@
-import { Next } from 'restify'
-import { InternalServerError, BadRequestError } from 'restify-errors'
-import { Post, Get, Controller } from 'inversify-restify-utils';
-import { injectable, inject } from 'inversify'
-import { IDatabase } from 'pg-promise'
+import {Next} from 'restify'
+import {InternalServerError, BadRequestError} from 'restify-errors'
+import {Post, Get, Controller} from 'inversify-restify-utils';
+import {injectable, inject} from 'inversify'
+import {IDatabase} from 'pg-promise'
 
-import { IController, ILogger, ILoggerFactory, IUserService, IReq, IRes } from '../interfaces'
-import { API_BASE } from '../config/constants'
+import {IController, ILogger, ILoggerFactory, IUserService, IReq, IRes} from '../interfaces'
+import {API_BASE} from '../config/constants'
 import __ from '../config/constants'
 import Validate from '../validate'
+import {IExtensions} from "../db/index";
 
 @injectable()
 @Controller(`${API_BASE}/users`)
 class UsersController implements IController {
     @inject(__.UserService) userService: IUserService;
-    @inject(__.Database) db: IDatabase;
+    @inject(__.Database) db: IDatabase<IExtensions>&IExtensions;
     private logger: ILogger;
 
-    constructor( @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
+
+    constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
         this.logger = LoggerFactory.getLogger(this)
     }
 
@@ -37,9 +39,9 @@ class UsersController implements IController {
 
     @Post('/empty')
     private async empty(req: IReq, res: IRes, next: Next) {
-        await this.userService.empty()
-        res.send(200)
-        return next()
+        await this.userService.empty();
+        res.send(200);
+        return next();
     }
 
     @Validate
@@ -51,7 +53,7 @@ class UsersController implements IController {
         }
 
         const session = await this.userService.authenticate(req.body.password, user);
-        res.send({ id_token: session });
+        res.send({id_token: session});
         return next()
     }
 }

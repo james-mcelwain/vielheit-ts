@@ -17,6 +17,7 @@
     "@types/core-decorators": "^0.10.30",
     "@types/inversify-restify-utils": "^1.0.1",
     "@types/jsonwebtoken": "^7.1.33",
+    "@types/node": "^6.0.45",
     "@types/node-uuid": "^0.0.28",
     "@types/react": "^0.14.38",
     "@types/react-dom": "^0.14.17",

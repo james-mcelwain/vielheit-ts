@@ -1,5 +1,8 @@
 import {IDatabase, IMain} from 'pg-promise'
+
 import sqlProvider from '../sql'
+import {} from '../sql/'
+import {IUser} from '../../interfaces'
 
 const sql = sqlProvider.users;
 
@@ -42,7 +45,7 @@ export class Repository {
         return this.db.oneOrNone('SELECT * from Users_View WHERE id = $1', id)
     }
     
-    public async findPasswordHashById(id: number) {
+    public async findPasswordHashById(id: number): Promise<{password: string}> {
         return this.db.oneOrNone('SELECT password from Users where id = $1', id)
     }
 

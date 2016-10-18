@@ -11,6 +11,7 @@ import {TYPE} from 'inversify-restify-utils';
 import IController from '../interfaces/controller'
 import HomeController from '../controllers/index'
 import UsersController from '../controllers/users'
+import {IExtensions} from "../db/index";
 
 const kernel = new Kernel();
 
@@ -32,7 +33,7 @@ kernel
 // Database
 // In our case, an instnace of a postgres client
 kernel
-    .bind<IDatabase>(__.Database)
+    .bind<IDatabase<IExtensions>>(__.Database)
     .toConstantValue(kernel.get<IDatabaseProvider>(__.DatabaseProvider).getDatabase());
 
 

@@ -60,7 +60,7 @@ class UserService implements IUserService {
     }
 
     public async updatePassword(userId: number, oldPassword: string, newPassword: string) {
-        const user = await this.db.users.find(userId);
+        const user = <IUser> await this.db.users.find(userId);
         const passwordHash = user.password;
         const candidateHash = await hashAsync(oldPassword, SALT_WORK_FACTOR);
         const valid = await compareAsync(candidateHash, passwordHash);
@@ -72,7 +72,7 @@ class UserService implements IUserService {
     }
 
     public async authenticate(candidate: string, user: IUser): Promise<string> {
-        const { password }  = await this.db.users.findPasswordHashById(user.id);
+        const { password }  = await this.db.users.findPasswordHashById(+user.id);
         if (!hash) {
             return Promise.reject(new Error('User not found'))
         }
