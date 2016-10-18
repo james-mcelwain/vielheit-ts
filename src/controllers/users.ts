@@ -51,7 +51,7 @@ class UsersController implements IController {
         }
 
         const session = await this.userService.authenticate(req.body.password, user);
-        res.send(session);
+        res.send({ id_token: session });
         return next()
     }
 }

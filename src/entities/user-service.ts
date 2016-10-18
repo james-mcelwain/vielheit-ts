@@ -30,7 +30,9 @@ class UserService implements IUserService {
 
     public async onBootstrap() {
         this.logger.info('create users table');
-        return this.db.users.create();
+        await this.db.users.create();
+        this.logger.info('create users view')
+        await this.db.users.createUsersView();
     }
 
     public async findByEmail(email: string) {
@@ -70,8 +72,12 @@ class UserService implements IUserService {
     }
 
     public async authenticate(candidate: string, user: IUser): Promise<string> {
-        const auth = await compareAsync(candidate, user.password);
-        const session = await this.session.setSession(user)
+        const { password }  = await this.db.users.findPasswordHashById(user.id);
+        if (!hash) {
+            return Promise.reject(new Error('User not found'))
+        }
+        const auth = await compareAsync(candidate, password);
+        const session = await this.session.setSession(user);
         return session
     }
 

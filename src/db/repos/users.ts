@@ -25,6 +25,10 @@ export class Repository {
     public async empty() {
         return this.db.none(sql.empty)
     }
+    
+    public async createUsersView() {
+        return this.db.none(sql.createUsersView)
+    }
 
     public async add(user: Object) {
         return this.db.one(sql.add, user, (u: any) => u.id)
@@ -35,15 +39,19 @@ export class Repository {
     }
 
     public async find(id: number) {
-        return this.db.oneOrNone('SELECT * FROM Users WHERE id = $1', id)
+        return this.db.oneOrNone('SELECT * from Users_View WHERE id = $1', id)
+    }
+    
+    public async findPasswordHashById(id: number) {
+        return this.db.oneOrNone('SELECT password from Users where id = $1', id)
     }
 
     public async findByEmail(email: String) {
-        return this.db.oneOrNone('SELECT * FROM Users WHERE email = $1', email)
+        return this.db.oneOrNone('SELECT * from Users_View WHERE email = $1', email)
     }
 
     public async all() {
-        return this.db.any('SELECT * FROM Users')
+        return this.db.any('SELECT * from Users_View ')
     }
 
     public async total() {

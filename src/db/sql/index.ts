@@ -1,4 +1,4 @@
-import {QueryFile} from 'pg-promise'
+import { QueryFile } from 'pg-promise'
 import * as path from 'path'
 
 export class SQL_Helper {
@@ -25,5 +25,6 @@ export default {
         drop: SQL_Helper.readFile('users/drop.sql'),
         add: SQL_Helper.readFile('users/add.sql'),
         updatePassword: SQL_Helper.readFile('users/update-password'),
+        createUsersView: SQL_Helper.readFile('users/users-view.sql'),
     },
 }

@@ -49,7 +49,7 @@ class HTTPServer implements IHttpServer {
 
         this.server = this.router
             .setConfig((app) => {
-                app.use((req: IReq, res: IRes, next: Function) => {
+                app.pre((req: IReq, res: IRes, next: Function) => {
                     req.start = Date.now()
                     req.uuid = uuid()
                     this.logger.info(`| ${req.uuid} | method=${req.method} url=${req.url}`)
