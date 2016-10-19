@@ -6,13 +6,20 @@ import { ILogger, ILoggerFactory, IReq, IRes } from '../interfaces'
 import __ from '../config/constants'
 import IHttpServer from '../interfaces/http-server'
 import { v4 as uuid } from 'node-uuid'
+import ISessionService from "../interfaces/session-service";
+
+declare type process = {
+    env: any,
+    exit: Function
+}
 
 @injectable()
 class HTTPServer implements IHttpServer {
-    private server: Server;
+    private server: Server | any;
     private port: number;
     private router: InversifyRestifyServer;
     @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory;
+    @inject(__.SessionService) session: ISessionService;
     public logger: ILogger;
 
     public constructor(
@@ -21,7 +28,7 @@ class HTTPServer implements IHttpServer {
         version: string = ''
     ) {
         this.port = port;
-        this.router = new InversifyRestifyServer(kernel)
+        this.router = new InversifyRestifyServer(<any> kernel)
     }
 
 
@@ -47,7 +54,7 @@ class HTTPServer implements IHttpServer {
             fn()
         });
 
-        this.server = this.router
+        this.server = <Server> this.router
             .setConfig((app: Server) => {
                 app.pre((req: IReq, res: IRes, next: Function) => {
                     req.start = Date.now();
@@ -77,7 +84,7 @@ class HTTPServer implements IHttpServer {
             process.exit(1)
         });
 
-        this.server.on('InternalServer', (req: IReq, res: IRes, err: Error, cb: Function) => {
+        this.server.on('InternalServer', (req: IReq, res: IRes, err: any, cb: Function) => {
             this.logger.error(err);
 
             // TODO
