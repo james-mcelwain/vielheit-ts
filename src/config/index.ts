@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 import {Kernel} from 'inversify'
+
 import __ from './constants'
 import {IApp, IHTTPServer, IUserService, IDatabaseProvider, 
     ISessionService, ICacheService } from '../interfaces'
