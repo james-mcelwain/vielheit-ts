@@ -35,11 +35,11 @@ class UserService implements IUserService {
         await this.db.users.createUsersView();
     }
 
-    public async findByEmail(email: string) {
+    public async findByEmail(email: String) {
         return this.db.users.findByEmail(email);
     }
 
-    public async findById(id: number | string) {
+    public async findById(id: Number | String) {
         return this.db.users.find(+id);
     }
 
@@ -47,7 +47,7 @@ class UserService implements IUserService {
         return this.db.users.all()
     }
 
-    public async add(req: IUser): Promise<number> {
+    public async add(req: IUser): Promise<Number> {
         const emailExists = await this.db.users.findByEmail(req.email);
         if (emailExists) {
             throw new Error('Email already exists')
@@ -59,7 +59,7 @@ class UserService implements IUserService {
         return id
     }
 
-    public async updatePassword(userId: number, oldPassword: string, newPassword: string) {
+    public async updatePassword(userId: Number, oldPassword: String, newPassword: String) {
         const user = <IUser> await this.db.users.find(userId);
         const passwordHash = user.password;
         const candidateHash = await hashAsync(oldPassword, SALT_WORK_FACTOR);
@@ -71,7 +71,7 @@ class UserService implements IUserService {
         return Promise.reject(new Error())
     }
 
-    public async authenticate(candidate: string, user: IUser): Promise<string> {
+    public async authenticate(candidate: String, user: IUser): Promise<String> {
         const { password }  = await this.db.users.findPasswordHashById(+user.id);
         if (!hash) {
             return Promise.reject(new Error('User not found'))
@@ -88,30 +88,30 @@ class UserService implements IUserService {
 
 class ValidateUserReq {
     @IsNumeric()
-    _id: string
-    set id(id: number) {
+    _id: String;
+    set id(id: Number) {
         this._id = id + ''
     }
 
     @IsLength(6, 20)
-    password: string
+    password: String
 }
 
 export class User {
     @IsLength(6, 20)
-    username: string;
+    username: String;
 
     @IsEmail()
-    email: string;
+    email: String;
 
     @IsLength(6, 20)
-    password: string;
+    password: String;
 
     @IsLength(3, 20)
-    fname: string;
+    fname: String;
 
     @IsLength(3, 20)
-    lname: string;
+    lname: String;
 }
 
 export default UserService

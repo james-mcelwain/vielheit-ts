@@ -1,10 +1,9 @@
 interface IUser {
-    id?: string | number,
-    username: string,
-    email: string,
-    password: string,
-    fname: string,
-    lname: string,
+    username: String,
+    email: String,
+    fname: String,
+    lname: String,
+    password?: String
 }
 
 export default IUser

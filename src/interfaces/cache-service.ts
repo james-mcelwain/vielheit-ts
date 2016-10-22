@@ -1,6 +1,6 @@
 interface ICacheService {
-    get(key: string): Promise<string | Error>
-    set(key: string, value: string): Promise<boolean | Error>
+    get(key: string): Promise<String| Error>
+    set(key: string, value: String): Promise<Boolean | Error>
     onBootstrap(): any
 }
 

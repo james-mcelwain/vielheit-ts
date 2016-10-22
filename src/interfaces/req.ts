@@ -1,11 +1,11 @@
 import {Request} from "restify";
 
 interface IReq extends Request {
-  start: number,
-  uuid: string,
+  start: Number,
+  uuid: String,
   body: any,
-  method: string,
-  url: string,
+  method: String,
+  url: String,
 }
 
 type HTTPMethod = 'POST' | 'OPTIONS' |  'GET' | 'POST' | 'PUT' | 'PATCH' | 'HEAD'

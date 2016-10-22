@@ -3,27 +3,27 @@ import IUser from "../interfaces/user";
 
 class UsersController_authenticate {
     @IsEmail()
-    email: string = '' // TODO: It sucks to have to initialize these
+    email: String = ''; // TODO: It sucks to have to initialize these
 
     @IsLength(6, 20)
-    password: string = ''
+    password: String = '';
 }
 
 class UsersController_create implements IUser {
   @IsLength(3, 20)
-  fname: string = ''
+  fname: String = '';
 
   @IsLength(3, 20)
-  lname: string = ''
+  lname: String = '';
 
   @IsLength(6, 20)
-  username: string = ''
+  username: String = '';
 
   @IsLength(6, 20)
-  password: string = ''
+  password: String = '';
 
   @IsEmail()
-  email: string = ''
+  email: String = '';
 }
 
 
@@ -33,10 +33,10 @@ const _validators = {
 }
 
 const validators = new Proxy(_validators, {
-  get(target: any, name: string) {
+  get(target: any, name: String) {
     return name in target? 
       target[name] : new Error(`Validator ${name} not found!`);
   }
-})
+});
 
 export default validators
