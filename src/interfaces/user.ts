@@ -3,7 +3,8 @@ interface IUser {
     email: String,
     fname: String,
     lname: String,
-    password?: String
+    password?: String,
+    id?: Number
 }
 
 export default IUser

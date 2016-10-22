@@ -15,11 +15,11 @@ import IHTTPServer from "../interfaces/http-server";
 import HTTPServer from "../core/http-server";
 import LoggerFactory from "../core/logger-factory";
 import IUserService from "../interfaces/user-service";
-import UserService from "../services/user-service";
+import UserService from "../services/user";
 import ISessionService from "../interfaces/session-service";
-import SessionService from "../services/session-service";
+import SessionService from "../services/session";
 import ICacheService from "../interfaces/cache-service";
-import CacheService from "../services/cache-service";
+import CacheService from "../services/cache";
 
 const kernel = new Kernel();
 
