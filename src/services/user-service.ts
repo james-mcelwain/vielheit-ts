@@ -1,21 +1,21 @@
-import { IDatabase } from 'pg-promise'
-import { injectable, inject } from 'inversify'
-import { hash, compare } from 'bcrypt'
-import { Validator } from 'validator.ts/Validator'
-import { IsLength, IsEmail, IsNumeric } from 'validator.ts/decorator/Validation'
-import { promisify } from 'bluebird'
-
-import {
-    ILoggerFactory, ILogger, IUserService,
-    IUser, ISessionService
-} from '../interfaces'
-import __ from '../config/constants'
-import { IExtensions } from '../db'
+import {IDatabase} from "pg-promise";
+import {injectable, inject} from "inversify";
+import {hash, compare} from "bcrypt";
+import {Validator} from "validator.ts/Validator";
+import {IsLength, IsEmail, IsNumeric} from "validator.ts/decorator/Validation";
+import {promisify} from "bluebird";
+import __ from "../config/constants";
+import {IExtensions} from "../db";
+import ISessionService from "../interfaces/session-service";
+import IUserService from "../interfaces/user-service";
+import ILogger from "../interfaces/logger";
+import ILoggerFactory from "../interfaces/logger-factory";
+import IUser from "../interfaces/user";
 
 const validator = new Validator();
 const SALT_WORK_FACTOR = 10;
-const hashAsync = promisify(hash)
-const compareAsync = promisify(compare)
+const hashAsync = promisify(hash);
+const compareAsync = promisify(compare);
 
 
 @injectable()

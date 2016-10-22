@@ -1,7 +1,7 @@
-import {Validator} from 'validator.ts/Validator'
-import {InternalServerError, BadRequestError} from 'restify-errors'
-import IReq from '../interfaces/req'
-import validators from './validators'
+import {Validator} from "validator.ts/Validator";
+import {InternalServerError, BadRequestError} from "restify-errors";
+import IReq from "../interfaces/req";
+import validators from "./validators";
 
 
 export default function Valdiate(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {

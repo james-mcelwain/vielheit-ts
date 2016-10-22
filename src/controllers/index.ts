@@ -1,14 +1,16 @@
-import { Next } from 'restify'
-import { InternalServerError }  from 'restify-errors'
-import { Get, Controller } from 'inversify-restify-utils';
-import { injectable, inject } from 'inversify'
-import { join } from 'path'
-import { readFile } from 'fs'
-import { promisify } from 'bluebird'
-
-import IController from '../interfaces/controller'
-import __ from '../config/constants'
-import { ILogger, IReq, IRes, ILoggerFactory } from '../interfaces'
+import {Next} from "restify";
+import {InternalServerError} from "restify-errors";
+import {Get, Controller} from "inversify-restify-utils";
+import {injectable, inject} from "inversify";
+import {join} from "path";
+import {readFile} from "fs";
+import {promisify} from "bluebird";
+import IController from "../interfaces/controller";
+import __ from "../config/constants";
+import ILogger from "../interfaces/logger";
+import ILoggerFactory from "../interfaces/logger-factory";
+import IRes from "../interfaces/res";
+import IReq from "../interfaces/req";
 
 let rFile = promisify(readFile);
 

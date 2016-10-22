@@ -1,12 +1,15 @@
-import { createServer, Server, RequestHandler, CORS, bodyParser } from 'restify'
-import { InversifyRestifyServer, TYPE } from 'inversify-restify-utils'
-import kernel from '../config/index'
-import { inject, injectable } from 'inversify'
-import { ILogger, ILoggerFactory, IReq, IRes } from '../interfaces'
-import __ from '../config/constants'
-import IHttpServer from '../interfaces/http-server'
-import { v4 as uuid } from 'node-uuid'
+import {Server, CORS, bodyParser} from "restify";
+import {InversifyRestifyServer} from "inversify-restify-utils";
+import kernel from "../config/index";
+import {inject, injectable} from "inversify";
+import __ from "../config/constants";
+import IHttpServer from "../interfaces/http-server";
+import {v4 as uuid} from "node-uuid";
 import ISessionService from "../interfaces/session-service";
+import ILoggerFactory from "../interfaces/logger-factory";
+import ILogger from "../interfaces/logger";
+import IReq from "../interfaces/req";
+import IRes from "../interfaces/res";
 
 declare type process = {
     env: any,

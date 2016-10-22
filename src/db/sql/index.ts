@@ -1,5 +1,5 @@
-import { QueryFile } from 'pg-promise'
-import * as path from 'path'
+import {QueryFile} from "pg-promise";
+import * as path from "path";
 
 export class SQL_Helper {
     public static readFile(file: string) {

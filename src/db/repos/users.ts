@@ -1,6 +1,5 @@
-import {IDatabase} from 'pg-promise'
-
-import sqlProvider from '../sql'
+import {IDatabase} from "pg-promise";
+import sqlProvider from "../sql";
 
 const sql = sqlProvider.users;
 

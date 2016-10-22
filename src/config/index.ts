@@ -1,18 +1,25 @@
-import 'reflect-metadata'
-import {Kernel} from 'inversify'
-
-import __ from './constants'
-import {IApp, IHTTPServer, IUserService, IDatabaseProvider, 
-    ISessionService, ICacheService } from '../interfaces'
-import {App, HTTPServer, LoggerFactory, UserService, 
-    SessionService, CacheService } from '../entities'
-import DatabaseProvider from '../db'
-import {IDatabase} from 'pg-promise'
-import {TYPE} from 'inversify-restify-utils';
-import IController from '../interfaces/controller'
-import HomeController from '../controllers/index'
-import UsersController from '../controllers/users'
+import "reflect-metadata";
+import {Kernel} from "inversify";
+import __ from "./constants";
+import DatabaseProvider from "../db";
+import {IDatabase} from "pg-promise";
+import {TYPE} from "inversify-restify-utils";
+import IController from "../interfaces/controller";
+import HomeController from "../controllers/index";
+import UsersController from "../controllers/users";
 import {IExtensions} from "../db/index";
+import IApp from "../interfaces/app";
+import App from "../core/app";
+import IDatabaseProvider from "../interfaces/database-provider";
+import IHTTPServer from "../interfaces/http-server";
+import HTTPServer from "../core/http-server";
+import LoggerFactory from "../core/logger-factory";
+import IUserService from "../interfaces/user-service";
+import UserService from "../services/user-service";
+import ISessionService from "../interfaces/session-service";
+import SessionService from "../services/session-service";
+import ICacheService from "../interfaces/cache-service";
+import CacheService from "../services/cache-service";
 
 const kernel = new Kernel();
 
@@ -75,13 +82,13 @@ kernel
 // Home -
 // Serves core assets and application, index.html, etc.
 kernel
-    .bind<IController>(TYPE.Controller)
+    .bind<IController>(<any> TYPE.Controller)
     .to(HomeController)
     .whenTargetNamed('HomeController');
 
 // Users -
 // TODO: API description
-kernel.bind<IController>(TYPE.Controller)
+kernel.bind<IController>(<any> TYPE.Controller)
     .to(UsersController)
     .whenTargetNamed('UsersController');
 

@@ -1,4 +1,4 @@
-import ILogger from './logger'
+import ILogger from "./logger";
 
 interface ILoggerFactory {
     getLogger(_this: Object): ILogger 

@@ -1,4 +1,4 @@
-import { IDatabase } from 'pg-promise'
+import {IDatabase} from "pg-promise";
 import {IExtensions} from "../db/index";
 
 interface IDatabaseProvider {

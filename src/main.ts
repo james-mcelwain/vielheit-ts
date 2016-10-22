@@ -1,7 +1,8 @@
-import kernel from './config/index'
-import IApp from './interfaces/app'
-import __ from './config/constants'
+import kernel from "./config/index";
+import IApp from "./interfaces/app";
+import __ from "./config/constants";
 
+declare var process: any;
 
 const title =
     `
@@ -21,6 +22,7 @@ const title =
    \\/__/     \\/__/     \\/__/            
 ________________________________________                                                       
 `;
+
 
 console.log(title);
 const app = kernel.get<IApp>(__.App);

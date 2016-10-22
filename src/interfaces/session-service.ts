@@ -1,4 +1,4 @@
-import IUser from './user'
+import IUser from "./user";
 
 interface ISessionService {
     setSession(user: IUser): Promise<string>

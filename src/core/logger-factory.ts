@@ -1,6 +1,6 @@
-import { createLogger, Logger, LoggerOptions, stdSerializers as serializers } from 'bunyan'
-import { injectable } from 'inversify'
-import { ILogger } from '../interfaces'
+import {createLogger, LoggerOptions, stdSerializers as serializers} from "bunyan";
+import {injectable} from "inversify";
+import ILogger from "../interfaces/logger";
 
 @injectable()
 class LoggerFactory {

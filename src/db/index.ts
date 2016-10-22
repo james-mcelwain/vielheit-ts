@@ -1,8 +1,8 @@
-import {injectable} from 'inversify'
-import * as promise from 'bluebird'
-import * as pgPromise from 'pg-promise'
-
-import {Repository as UsersRepository} from '../db/repos/users'
+import {injectable} from "inversify";
+import * as promise from "bluebird";
+import * as pgPromise from "pg-promise";
+import {Repository as UsersRepository} from "../db/repos/users";
+import IDatabaseProvider from "../interfaces/database-provider";
 
 export interface IExtensions {
     users: UsersRepository,
@@ -11,8 +11,6 @@ export interface IExtensions {
 declare type process = {
     env: any
 }
-
-import IDatabaseProvider from '../interfaces/database-provider'
 
 @injectable()
 class DatabaseProvider implements IDatabaseProvider {

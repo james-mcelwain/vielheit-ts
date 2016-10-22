@@ -1,11 +1,13 @@
-import { inject, injectable } from 'inversify'
-import {
-    IApp, IHTTPServer, ILoggerFactory, ILogger,
-    IUserService, ICacheService
-} from '../interfaces'
-import __ from '../config/constants'
-import { Logger } from "bunyan";
+import {inject, injectable} from "inversify";
+import __ from "../config/constants";
+import IApp from "../interfaces/app";
+import IHTTPServer from "../interfaces/http-server";
+import IUserService from "../interfaces/user-service";
+import ICacheService from "../interfaces/cache-service";
+import ILogger from "../interfaces/logger";
+import ILoggerFactory from "../interfaces/logger-factory";
 
+declare var process: any;
 
 @injectable()
 class App implements IApp {

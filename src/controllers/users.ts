@@ -1,14 +1,17 @@
-import {Next} from 'restify'
-import {InternalServerError, BadRequestError} from 'restify-errors'
-import {Post, Get, Controller} from 'inversify-restify-utils';
-import {injectable, inject} from 'inversify'
-import {IDatabase} from 'pg-promise'
-
-import {IController, ILogger, ILoggerFactory, IUserService, IReq, IRes} from '../interfaces'
-import {API_BASE} from '../config/constants'
-import __ from '../config/constants'
-import Validate from '../validate'
+import {Next} from "restify";
+import {BadRequestError} from "restify-errors";
+import {Post, Get, Controller} from "inversify-restify-utils";
+import {injectable, inject} from "inversify";
+import {IDatabase} from "pg-promise";
+import __, {API_BASE} from "../config/constants";
+import Validate from "../validate";
 import {IExtensions} from "../db/index";
+import IController from "../interfaces/controller";
+import IUserService from "../interfaces/user-service";
+import ILogger from "../interfaces/logger";
+import ILoggerFactory from "../interfaces/logger-factory";
+import IRes from "../interfaces/res";
+import IReq from "../interfaces/req";
 
 @injectable()
 @Controller(`${API_BASE}/users`)

@@ -1,5 +1,5 @@
-import {IsLength, IsEmail, IsInt} from 'validator.ts/decorator/Validation'
-import {IUser} from '../interfaces'
+import {IsLength, IsEmail} from "validator.ts/decorator/Validation";
+import IUser from "../interfaces/user";
 
 class UsersController_authenticate {
     @IsEmail()
