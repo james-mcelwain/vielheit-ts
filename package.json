@@ -49,6 +49,7 @@
     "source-map-support": "^0.4.3",
     "typescript": "^2.0.3",
     "validator.ts": "^0.2.2",
+    "webpack": "^1.13.2",
     "webpack-node-externals": "^1.4.3"
   },
   "devDependencies": {

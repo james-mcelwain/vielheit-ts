@@ -27,7 +27,7 @@ class DatabaseProvider implements IDatabaseProvider {
         const config = {
             host: 'localhost',
             port: 5432,
-            database: process.env.PG_DATABASE || 'vielheit',
+            database: process.env.PG_DATABASE || 'vielheit_development',
             user: process.env.PG_USER || 'postgres',
             password: process.env.PG_PASSWORD || 'postgres'
         };
