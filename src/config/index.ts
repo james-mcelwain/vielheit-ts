@@ -87,7 +87,7 @@ kernel
     .whenTargetNamed('HomeController');
 
 // Users -
-// TODO: API description
+// Core API for dealing with users / authentication
 kernel.bind<IController>(<any> TYPE.Controller)
     .to(UsersController)
     .whenTargetNamed('UsersController');
