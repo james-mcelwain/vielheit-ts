@@ -36,15 +36,15 @@ class UserService implements IUserService {
     }
 
     public async findByEmail(email: String) {
-        return this.db.users.findByEmail(email);
+        return <IUser> this.db.users.findByEmail(email);
     }
 
     public async findById(id: Number | String) {
-        return this.db.users.find(+id);
+        return <IUser> this.db.users.find(+id);
     }
 
     public async getAll() {
-        return this.db.users.all()
+        return <Array<IUser>> this.db.users.all()
     }
 
     public async add(req: IUser): Promise<Number> {

@@ -3,7 +3,7 @@ import * as path from "path";
 
 export class SQL_Helper {
     public static readFile(file: string) {
-        const fullPath: string = path.join('../src/db/sql', file);
+        const fullPath: string = path.join('../src/db', `${file}.sql`);
 
         const options = {
             minify: true,
@@ -19,13 +19,16 @@ export class SQL_Helper {
 
 export default {
     users: {
-        create: SQL_Helper.readFile('users/create.sql'),
-        empty: SQL_Helper.readFile('users/empty.sql'),
-        init: SQL_Helper.readFile('users/init.sql'),
-        drop: SQL_Helper.readFile('users/drop.sql'),
-        add: SQL_Helper.readFile('users/add.sql'),
+        create: SQL_Helper.readFile('users/create'),
+        empty: SQL_Helper.readFile('users/empty'),
+        init: SQL_Helper.readFile('users/init'),
+        drop: SQL_Helper.readFile('users/drop'),
+        add: SQL_Helper.readFile('users/add'),
         updatePassword: SQL_Helper.readFile('users/update-password'),
-        createUsersView: SQL_Helper.readFile('users/users-view.sql'),
-        remove: SQL_Helper.readFile('users/remove.sql'),
+        createUsersView: SQL_Helper.readFile('users/users-view'),
+        remove: SQL_Helper.readFile('users/remove'),
     },
+    posts: {
+        create: SQL_Helper.readFile('posts/create')
+    }
 }

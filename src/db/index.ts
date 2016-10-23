@@ -2,10 +2,12 @@ import {injectable} from "inversify";
 import * as promise from "bluebird";
 import * as pgPromise from "pg-promise";
 import {Repository as UsersRepository} from "../db/repos/users";
+import {Repository as PostsRepository} from "../db/repos/posts";
 import IDatabaseProvider from "../interfaces/database-provider";
 
 export interface IExtensions {
     users: UsersRepository,
+    posts: PostsRepository
 }
 
 declare type process = {
@@ -20,7 +22,8 @@ class DatabaseProvider implements IDatabaseProvider {
         const options = {
             promiseLib: promise,
             extend: (obj: any) => {
-                obj.users = new UsersRepository(obj)
+                obj.users = new UsersRepository(obj);
+                obj.posts = new PostsRepository(obj);
             }
         };
 
