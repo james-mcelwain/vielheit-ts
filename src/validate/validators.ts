@@ -33,7 +33,10 @@ const _validators = {
 }
 
 const validators = new Proxy(_validators, {
+  // wrap the getter for any property on the _validators obj
   get(target: any, name: String) {
+    
+    // this is for the developers benefit mostly, if you spell shit wrong, we serve an error
     return name in target? 
       target[name] : new Error(`Validator ${name} not found!`);
   }

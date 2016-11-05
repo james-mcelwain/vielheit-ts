@@ -39,7 +39,7 @@ class CacheService implements  ICacheService{
     public async get(key: string) {
         return new Promise((resolve, reject) => {
             this.client.get(key, (err, value) => {
-                if (err) {
+                if (er) {
                     reject(err);
                     return
                 }
