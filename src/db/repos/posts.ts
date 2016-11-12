@@ -4,9 +4,9 @@ import sqlProvider from "../sql"
 const posts = sqlProvider.posts;
 
 export class Repository {
-    private db: IDatabase;
+    private db: IDatabase<any>;
 
-    constructor(db: IDatabase) {
+    constructor(db: IDatabase<any>) {
         this.db = db;
     }
 

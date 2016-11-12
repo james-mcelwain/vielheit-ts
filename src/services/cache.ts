@@ -14,7 +14,6 @@ class CacheService implements  ICacheService{
 
     public constructor( @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
         this.logger = LoggerFactory.getLogger(this);
-
     }
 
     public async onBootstrap() {
@@ -33,18 +32,17 @@ class CacheService implements  ICacheService{
             Reflect.get(this.client, 'on').call(this, 'reconnecting', (err: Error) =>
                 this.logger.info(`reconnecting ${err ? 'err=' + err : ''}`));
         })
-
     }
 
     public async get(key: string) {
         return new Promise((resolve, reject) => {
             this.client.get(key, (err, value) => {
-                if (er) {
+                if (err) {
                     reject(err);
                     return
                 }
 
-                const str = <string> value
+                const str = <string> value;
                 resolve(str)
             })
         })

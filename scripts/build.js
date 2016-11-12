@@ -1,5 +1,5 @@
-const webpack = require('webpack')
-const chalk = require('chalk')
+const webpack = require('webpack');
+const chalk = require('chalk');
 
 const log = (err, stats) => {
     if (err) {
@@ -8,7 +8,7 @@ const log = (err, stats) => {
 
     if (stats.compilation && stats.compilation.errors) {
         stats.compilation.errors.forEach((x, i) => {
-            console.log(chalk.yellow.bold(x.module && x.module.resource))
+            console.log(chalk.yellow.bold(x.module && x.module.resource));
             console.log(x.message
                         .replace(chalk.styles.red.open, chalk.styles.gray.close)
                         .replace(chalk.styles.red.close, chalk.styles.gray.close))
@@ -17,9 +17,9 @@ const log = (err, stats) => {
 }
 
 module.exports = function Main(config) {
-    const compiler = webpack(config)
+    const compiler = webpack(config);
 
-    let [,, watch] = process.argv
+    let [,, watch] = process.argv;
 
     if (watch === '--watch' || watch === '-w') {
         return compiler.watch({
@@ -28,7 +28,7 @@ module.exports = function Main(config) {
         }, (err, stats) => {
             log(err, stats)
         })
-    }
+    };
 
     compiler.run(log)
-}
+};

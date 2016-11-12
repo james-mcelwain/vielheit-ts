@@ -24,10 +24,10 @@ class App implements IApp {
     public async bootstrap(): Promise<Boolean> {
         this.logger.info('starting services');
         try {
-            await this.httpServer.onBootstrap(this.userService.onBootstrap.bind(this.userService));
-            await this.httpServer.onBootstrap(this.cache.onBootstrap.bind(this.cache))
+            this.httpServer.onBootstrap(this.userService.onBootstrap.bind(this.userService));
+            this.httpServer.onBootstrap(this.cache.onBootstrap.bind(this.cache))
         } catch (e) {
-            this.logger.fatal(e)
+            this.logger.fatal(e);
             process.exit(1)
         }
         this.httpServer.listen();

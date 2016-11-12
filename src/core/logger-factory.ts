@@ -1,6 +1,7 @@
 import {createLogger, LoggerOptions, stdSerializers as serializers} from "bunyan";
-import {injectable} from "inversify";
+import {injectable}from "inversify";
 import ILogger from "../interfaces/logger";
+
 
 @injectable()
 class LoggerFactory {
@@ -18,9 +19,9 @@ class LoggerFactory {
     private static createLogger(name: string): ILogger {
         if (!LoggerFactory.loggers[name]) {
             const logger: ILogger = createLogger(LoggerFactory.makeConfig(name, LoggerFactory.config));
-            logger['format'] = (req: any) => {
+            Reflect.set(logger, 'format', (req: any) => {
               return `req=${req.uuid}${req.session ? ` session=${req.session}` : ''}`
-            };
+            });
             LoggerFactory.loggers[name] = logger;
         }
 
@@ -29,9 +30,18 @@ class LoggerFactory {
 
     private static loggers: { [key: string]: ILogger } = {};
 
-    public static getLogger(name: Object): ILogger {
-        return LoggerFactory.createLogger(name.constructor.toString().match(/class ([\w|_]+)/)[1])
+    public static getLogger(name: { new(...args: any[]): any; }): ILogger {
+        const loggerName = name.constructor.toString().match(/class ([\w|_]+)/);
+
+        if (loggerName) {
+            return LoggerFactory.createLogger(loggerName[1]);
+        }
+
+        return LoggerFactory.createLogger('Global');
+
     }
 }
+
+
 
 export default LoggerFactory

@@ -1,4 +1,4 @@
-import {Server, CORS, bodyParser} from "restify";
+import {Server, CORS, bodyParser, Response, Request, Next} from "restify";
 import {InversifyRestifyServer} from "inversify-restify-utils";
 import kernel from "../config/index";
 import {inject, injectable} from "inversify";
@@ -50,19 +50,19 @@ class HTTPServer implements IHttpServer {
         })
     }
 
-    public listen(): void {
+    public async listen(): Promise<void> {
         this.logger = this.LoggerFactory.getLogger(this);
 
-        this.toBootstrap.forEach((fn) => {
-            fn()
-        });
+        for (let fn of this.toBootstrap) {
+            await fn()
+        }
 
         this.server = <Server> this.router
             .setConfig((app: Server) => {
-                app.pre((req: IReq, res: IRes, next: Function) => {
-                    req.start = Date.now();
-                    req.uuid = uuid();
-                    this.logger.info(`${this.logger['format'](req)} method=${req.method} url=${req.url}`);
+                app.pre((req: Request, res: Response, next: Next) => {
+                    Reflect.set(req, 'start', Date.now());
+                    Reflect.set(req, 'uuid', uuid());
+                    this.logger.info(`${Reflect.get(this.logger, 'format')(req)} method=${req.method} url=${req.url}`);
                     next()                    
                 });
                 
@@ -74,7 +74,7 @@ class HTTPServer implements IHttpServer {
 
         this.server.on('after', (req: IReq, res: IRes, route: string, err: Error) => {
             err && err.name !== 'BadRequestError' && this.logger.error(err);
-            this.logger.info(`${this.logger['format'](req)} status=${res.statusCode} time=${Date.now() - req.start }`)
+            this.logger.info(`${Reflect.get(this.logger, 'format')(req)} status=${res.statusCode} time=${Date.now() - (+req.start) }`)
         });
 
         this.server.on('uncaughtEception', (req: IReq, res: IRes, route: string, err: Error) => {
@@ -114,8 +114,8 @@ class HTTPServer implements IHttpServer {
         });
 
         this.server.on('NotFound', (req: any, res: any, err: any, cb: Function) => {
-            req.uuid = uuid()
-            req.start = Date.now()
+            req.uuid = uuid();
+            req.start = Date.now();
             
             const page = `
             <h1>404</h1>

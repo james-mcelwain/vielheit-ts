@@ -28,7 +28,7 @@ console.log(title);
 const app = kernel.get<IApp>(__.App);
 
 process.on('uncaughtException', (err: Error) => { app.logger.fatal(err); process.exit(1) });
-process.on('unhandledRejection', (err: Error) =>{ app.logger.fatal(err); process.exit(1) });
+process.on('unhandledRejection', (err: Error) => { app.logger.fatal(err); process.exit(1) });
 
 app.bootstrap();
 

@@ -9,6 +9,7 @@
         "jsx": "react",
         "emitDecoratorMetadata": true,
         "lib": ["es6"],
-        "types": ["reflect-metadata", "node"]
+        "types": ["reflect-metadata", "node"],
+        "strictNullChecks": true
     }
 }

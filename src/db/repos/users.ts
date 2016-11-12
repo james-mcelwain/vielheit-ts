@@ -46,7 +46,7 @@ export class Repository {
         return this.db.oneOrNone('SELECT password from Users where id = $1', id)
     }
 
-    public async findByEmail(email: String) {
+    public async findByEmail(email: string) {
         return this.db.oneOrNone('SELECT * from Users_View WHERE email = $1', email)
     }
 

@@ -13,7 +13,7 @@ export default function Valdiate(target: any, propertyKey: string, descriptor: T
     const ValidationClass = Reflect.get(validators, validatorName);
 
     // Store the original method, we're going to wrap it
-    const method = descriptor.value;
+    const method = descriptor.value || function() {};
 
     // We overwrite the route with our validation logic
     descriptor.value = function (...args: Array<any>) {

@@ -27,9 +27,9 @@ class SessionService implements ISessionService {
         this.logger = LoggerFactory.getLogger(this)
     }
 
-    public async getSession(token: String): Promise<String | Error> {
-        return new Promise((resolve, reject) => {
-            verify(token, PUBLIC_KEY, (err, decoded) => {
+    public async getSession(token: string): Promise<string> {
+        const p: Promise<string> = new Promise((resolve, reject) => {
+            verify(token, PUBLIC_KEY, (err: Error, decoded: string) => {
                 if (err) {
                     reject(err);
                     return
@@ -38,9 +38,11 @@ class SessionService implements ISessionService {
                 resolve(decoded)
             })
         })
+
+        return p
     }
 
-    public async setSession(user: IUser): Promise<String> {
+    public async setSession(user: IUser): Promise<string> {
         const sessionId = uuid();
         const token = sign({ ['session-id']: sessionId }, PRIVATE_KEY, { algorithm: 'RS256' });
         await this.cache.set(sessionId, JSON.stringify(user));

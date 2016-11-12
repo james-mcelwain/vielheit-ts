@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('path');
 
 module.exports = {
     target: 'node',
@@ -23,4 +23,4 @@ module.exports = {
         ]
     },
     externals: [require('webpack-node-externals')()],
-}
+};

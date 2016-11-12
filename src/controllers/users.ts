@@ -50,7 +50,7 @@ class UsersController implements IController {
     @Validate
     @Post('/authenticate')
     private async authenticate(req: IReq, res: IRes, next: Next) {
-        const user = await this.userService.findByEmail(req.body.email)
+        const user = await this.userService.findByEmail(req.body.email);
         if (!user) {
             return next(new BadRequestError('User not found'))
         }

@@ -31,37 +31,36 @@ class UserService implements IUserService {
     public async onBootstrap() {
         this.logger.info('create users table');
         await this.db.users.create();
-        this.logger.info('create users view')
+        this.logger.info('create users view');
         await this.db.users.createUsersView();
     }
 
-    public async findByEmail(email: String) {
-        return <IUser> this.db.users.findByEmail(email);
+    public async findByEmail(email: string): Promise<IUser> {
+        return this.db.users.findByEmail(email);
     }
 
-    public async findById(id: Number | String) {
-        return <IUser> this.db.users.find(+id);
+    public async findById(id: number | string): Promise<IUser> {
+        return this.db.users.find(+id);
     }
 
-    public async getAll() {
-        return <Array<IUser>> this.db.users.all()
+    public async getAll(): Promise<Array<IUser>> {
+        return this.db.users.all()
     }
 
-    public async add(req: IUser): Promise<Number> {
+    public async add(req: IUser): Promise<number> {
         const emailExists = await this.db.users.findByEmail(req.email);
         if (emailExists) {
             throw new Error('Email already exists')
         }
 
-        req.password = await hashAsync(req.password, SALT_WORK_FACTOR)
+        req.password = await hashAsync(req.password, SALT_WORK_FACTOR);
 
-        const id = await this.db.users.add(req)
-        return id
+        return await this.db.users.add(req);
     }
 
-    public async updatePassword(userId: Number, oldPassword: String, newPassword: String) {
+    public async updatePassword(userId: number, oldPassword: string, newPassword: string) {
         const user = <IUser> await this.db.users.find(userId);
-        const passwordHash = user.password;
+        const passwordHash = user.password || '';
         const candidateHash = await hashAsync(oldPassword, SALT_WORK_FACTOR);
         const valid = await compareAsync(candidateHash, passwordHash);
         if (valid) {
@@ -71,14 +70,13 @@ class UserService implements IUserService {
         return Promise.reject(new Error())
     }
 
-    public async authenticate(candidate: String, user: IUser): Promise<String> {
+    public async authenticate(candidate: string, user: IUser): Promise<string> {
         const { password }  = await this.db.users.findPasswordHashById(+user.id);
         if (!hash) {
             return Promise.reject(new Error('User not found'))
         }
         const auth = await compareAsync(candidate, password);
-        const session = await this.session.setSession(user);
-        return session
+        return await this.session.setSession(user);
     }
 
     public async empty() {
@@ -88,30 +86,30 @@ class UserService implements IUserService {
 
 class ValidateUserReq {
     @IsNumeric()
-    _id: String;
-    set id(id: Number) {
+    _id: string;
+    set id(id: number) {
         this._id = id + ''
     }
 
     @IsLength(6, 20)
-    password: String
+    password: string
 }
 
 export class User {
     @IsLength(6, 20)
-    username: String;
+    username: string;
 
     @IsEmail()
-    email: String;
+    email: string;
 
     @IsLength(6, 20)
-    password: String;
+    password: string;
 
     @IsLength(3, 20)
-    fname: String;
+    fname: string;
 
     @IsLength(3, 20)
-    lname: String;
+    lname: string;
 }
 
 export default UserService

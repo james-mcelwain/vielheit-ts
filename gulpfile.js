@@ -1,18 +1,18 @@
-const gulp = require('gulp')
-const elm = require('gulp-elm')
-const gutil = require('gulp-util')
-const plumber = require('gulp-plumber')
-const connect = require('gulp-connect')
+const gulp = require('gulp');
+const elm = require('gulp-elm');
+const gutil = require('gulp-util');
+const plumber = require('gulp-plumber');
+const connect = require('gulp-connect');
 
 // File paths
 const paths = {
   dest: 'dist',
   elm: 'app/*.elm',
   static: 'app/*.{html,css}'
-}
+};
 
 // Init Elm
-gulp.task('elm-init', elm.init)
+gulp.task('elm-init', elm.init);
 
 // Compile Elm
 gulp.task('elm', ['elm-init'], () =>{
@@ -31,8 +31,8 @@ gulp.task('static', () => {
 
 // Watch for changes and compile
 gulp.task('watch', () => {
-    gulp.watch(paths.elm, ['elm'])
-    gulp.watch(paths.static, ['static'])
+    gulp.watch(paths.elm, ['elm']);
+    gulp.watch(paths.static, ['static']);
 })
 
 // Local server
@@ -40,9 +40,9 @@ gulp.task('connect', () => {
     connect.server({
         root: 'dist',
         port: 3000
-    })
+    });
 })
 
 // Main gulp tasks
-gulp.task('build', ['elm', 'static'])
-gulp.task('default', ['connect', 'build', 'watch'])
+gulp.task('build', ['elm', 'static']);
+gulp.task('default', ['connect', 'build', 'watch']);
