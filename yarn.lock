@@ -1409,10 +1409,6 @@ object-assign@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-1.0.0.tgz#e65dc8766d3b47b4b8307465c8311da030b070a6"
 
-object-assign@^2.0.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-2.1.1.tgz#43c36e5d569ff8e4816c4efa8be02d26967c18aa"
-
 object-assign@^4.0.1, object-assign@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.0.tgz#7a3b3d0e98063d43f4c03f2e8ae6cd51a86883a0"
@@ -2060,15 +2056,15 @@ tough-cookie@~2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-2.3.1.tgz#99c77dfbb7d804249e8a299d4cb0fd81fef083fd"
 
-ts-loader@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-0.8.2.tgz#7331296d13d5b3105cd905cebca39143eed2b255"
+ts-loader:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-1.2.0.tgz#9833f7024ce157200c6f9b169c49422ef3976e27"
   dependencies:
     arrify "^1.0.0"
     colors "^1.0.3"
     enhanced-resolve "^0.9.0"
     loader-utils "^0.2.6"
-    object-assign "^2.0.0"
+    object-assign "^4.1.0"
     semver "^5.0.1"
 
 tty-browserify@0.0.0:

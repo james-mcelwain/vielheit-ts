@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const webpack = require('webpack')
 
 const config = require('../webpack.config.js')
@@ -9,8 +11,10 @@ const log = (err, stats) => {
         console.log(err)
     }
 
-    if (stats.compillation && stats.compillation.errors) {
-        console.log(stats.compillation.errors)
+    if (stats.compilation && stats.compilation.errors) {
+        stats.compilation.errors.forEach(x => {
+            console.log(x.message)
+        })
     }
 }
 
@@ -22,7 +26,7 @@ void function Main() {
             aggregateTimeout: 300,
             poll: false,
         }, (err, stats) => {
-            logger(err, stats)
+            log(err, stats)
         })
     }
 
