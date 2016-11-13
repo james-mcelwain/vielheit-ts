@@ -11,6 +11,7 @@ import IUserService from "../interfaces/user-service";
 import ILogger from "../interfaces/logger";
 import ILoggerFactory from "../interfaces/logger-factory";
 import IUser from "../interfaces/user";
+import {IAddUserReq} from "../interfaces/user-service";
 
 const validator = new Validator();
 const SALT_WORK_FACTOR = 10;
@@ -24,7 +25,7 @@ class UserService implements IUserService {
     @inject(__.SessionService) session: ISessionService;
     private logger: ILogger;
 
-    public constructor( @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
+    public constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
         this.logger = LoggerFactory.getLogger(this)
     }
 
@@ -47,7 +48,7 @@ class UserService implements IUserService {
         return this.db.users.all()
     }
 
-    public async add(req: IUser): Promise<number> {
+    public async add(req: IAddUserReq): Promise<number> {
         const emailExists = await this.db.users.findByEmail(req.email);
         if (emailExists) {
             throw new Error('Email already exists')
@@ -59,8 +60,7 @@ class UserService implements IUserService {
     }
 
     public async updatePassword(userId: number, oldPassword: string, newPassword: string) {
-        const user = <IUser> await this.db.users.find(userId);
-        const passwordHash = user.password || '';
+        const passwordHash = await this.db.users.findPasswordHashById(userId);
         const candidateHash = await hashAsync(oldPassword, SALT_WORK_FACTOR);
         const valid = await compareAsync(candidateHash, passwordHash);
         if (valid) {

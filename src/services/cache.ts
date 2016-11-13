@@ -8,7 +8,7 @@ import ICacheService from "../interfaces/cache-service";
 declare var process:any;
 
 @injectable()
-class CacheService implements  ICacheService{
+class CacheService implements ICacheService{
     private client: RedisClient;
     private logger: ILogger;
 
@@ -38,7 +38,7 @@ class CacheService implements  ICacheService{
         })
     }
 
-    public async get(key: string) {
+    public async get(key: string): Promise<string> {
         return new Promise((resolve, reject) => {
             this.client.get(key, (err, value) => {
                 if (err) {
@@ -52,7 +52,7 @@ class CacheService implements  ICacheService{
         })
     }
 
-    public async set(key: string, value: string) {
+    public async set(key: string, value: string): Promise<boolean> {
         const time = Date.now();
         return new Promise((resolve, reject) => {
             this.client.set(key, value, (err, value) => {
