@@ -59,7 +59,7 @@ export class Repository {
     }
 
     public async updatePassword(password: string, id: number) {
-        return this.db.oneOrNone(sql.updatePassword, [password, id], (u: any) => u.id)
+        return this.db.oneOrNone(sql.updatePassword, [password, id], (u: any) => u && u.id)
     }
 
 }
