@@ -50,11 +50,10 @@ class HTTPServer implements IHttpServer {
         })
     }
 
+
     private middleware: Array<RequestHandler> = [];
     public registerMiddleware(handler: RequestHandler) {
-        console.log(this.middleware)
-        this.middleware = [handler]
-        console.log(this.middleware)
+        this.middleware.push(handler)
     }
 
     public async listen(): Promise<void> {
@@ -75,12 +74,8 @@ class HTTPServer implements IHttpServer {
                 });
                 
                 app.use(CORS());
-                app.use(bodyParser())
-
-                console.log(middleware)
                 for (let handler of middleware) {
-                    console.log(handler.toString())
-                    app.use(handler)
+                    app.pre(handler)
                 }
             })
             .build();
@@ -127,10 +122,7 @@ class HTTPServer implements IHttpServer {
             cb()
         });
 
-        this.server.on('NotFound', (req: any, res: any, err: any, cb: Function) => {
-            req.uuid = uuid();
-            req.start = Date.now();
-            
+        /*this.server.on('NotFound', (req: any, res: any, err: any, cb: Function) => {
             const page = `
             <h1>404</h1>
             `;
@@ -139,7 +131,7 @@ class HTTPServer implements IHttpServer {
             res.end(page);
             cb();
         });
-
+*/
         this.server.listen(this.port, () => this.logger.info(`${this.name} listening on ${this.port}`))
     }
 

@@ -12,7 +12,7 @@ import ILoggerFactory from "../interfaces/logger-factory";
 import IRes from "../interfaces/res";
 import IReq from "../interfaces/req";
 
-let rFile = promisify(readFile);
+let readFileA = promisify(readFile);
 
 @injectable()
 @Controller('/')
@@ -23,10 +23,11 @@ class HomeController implements IController {
         this.logger = LoggerFactory.getLogger(this)
     }
 
-    @Get('/')
-    private async index(req: IReq, res: IRes, next: Next) {
+    /**
+     @Get('/')
+     private async index(req: IReq, res: IRes, next: Next) {
         try {
-            const index = await rFile(join('.', 'src/public/index.html'));
+            const index = await readFileA(join('.', 'src/public/index.html'));
             res.writeHead(200);
             res.end(index);
             next()
@@ -34,16 +35,15 @@ class HomeController implements IController {
             next (new InternalServerError(e))
         }
     }
+     */
 
-    @Get('/public/bundle.js')
+    @Get('/public/js/bundle.js')
     private async bundle(req: IReq, res: IRes, next: Next) {
         try {
-
-            const bundle = await rFile(join('.', 'dist/bundle.js'));
+            const bundle = await readFileA(join('.', 'dist/bundle.js'), 'utf8');
             res.writeHead(200);
             res.end(bundle);
             next()
-
         } catch (e) {
             next(new InternalServerError(e))
         }

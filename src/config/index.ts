@@ -51,7 +51,8 @@ kernel
 // A generic server exposing GET, POST, PUT, and DEL
 kernel
     .bind<IHTTPServer>(__.HTTPServer)
-    .to(HTTPServer);
+    .to(HTTPServer)
+    .inSingletonScope();
 
 // LoggerFactory -
 // Static class providing loggers
