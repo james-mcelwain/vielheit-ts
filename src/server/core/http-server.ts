@@ -31,7 +31,7 @@ class HTTPServer implements IHttpServer {
         version: string = ''
     ) {
         this.port = port;
-        this.router = new InversifyRestifyServer(<any> kernel)
+        this.router = <InversifyRestifyServer> new InversifyRestifyServer(<any> kernel)
     }
 
 

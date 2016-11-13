@@ -5,6 +5,7 @@
         "noImplicitAny": true,
         "module": "commonjs",
         "target": "ES5",
+        "lib": ["es6", "dom"],
         "experimentalDecorators": true,
         "jsx": "react",
         "strictNullChecks": true
