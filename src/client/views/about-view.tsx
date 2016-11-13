@@ -16,7 +16,6 @@ export default class AboutView extends React.Component<any, any> {
         return <div>
             <h2>About {loading}</h2>
             <p>
-                ABOUT :)
             </p>
         </div>;
     }

@@ -1,13 +1,14 @@
 ﻿
 import * as React from 'react';
 import { Link } from 'react-router';
-import Hello from '../components/Hello';
+import Hello from '../components/hello';
 
 var HomeView = React.createClass({
     getInitialState: function() {
         return { loaded: false };
     },
-    
+
+
     componentDidMount: function() {
         this.setState({ loaded: true });
     },
