@@ -5,7 +5,7 @@ import ILogger from "../interfaces/logger";
 import {Request, Response, Next} from "restify";
 import IHTTPServer from "../interfaces/http-server";
 import {match, RouterContext} from "react-router";
-import routes from "../client/routes"
+import routes from "../../client/routes"
 import {API_BASE} from "../config/constants";
 import {readFile} from "fs";
 import {promisify} from "bluebird";

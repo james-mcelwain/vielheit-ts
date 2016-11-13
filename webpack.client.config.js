@@ -2,18 +2,18 @@ const path = require('path');
 
 module.exports = {
     target: 'node',
-    entry: path.resolve(__dirname, 'src', 'server', 'main.ts'),
+    entry: path.resolve(__dirname, 'src', 'client', 'main.tsx'),
     output: {
-        filename: path.resolve(__dirname, 'dist', 'index.js'),
+        filename: path.resolve(__dirname, 'dist', 'bundle.js'),
     },
     devtool: "source-map",
     resolve: {
-        extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
+        extensions: ["", ".ts", ".tsx", ".js", ".jsx"]
     },
     module: {
         loaders: [
             { test: /\.tsx?$/, loader: "ts-loader", exclude: /node_modules/, query: {
-                configFileName: path.resolve(__dirname, 'tsconfig.json'),
+                configFileName: path.resolve(__dirname, 'tsconfig.client.json'),
             } },
             { test: /\.json$/, loader: "json-loader" }
         ],
@@ -22,5 +22,4 @@ module.exports = {
             { test: /\.js$/, loader: "source-map-loader" },
         ]
     },
-    externals: [require('webpack-node-externals')()],
 };

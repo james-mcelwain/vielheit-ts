@@ -11,7 +11,14 @@ interface IUserService {
     onBootstrap: () => any
 }
 
-export interface IAddUserReq extends IUser {
+interface IBaseUser {
+    email: string
+    fname: string
+    lname: string
+    username: string
+}
+
+export interface IAddUserReq extends IBaseUser {
    password: string
 }
 

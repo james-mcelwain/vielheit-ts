@@ -8,7 +8,7 @@ const log = (err, stats) => {
 
     if (stats.compilation && stats.compilation.errors) {
         stats.compilation.errors.forEach((x, i) => {
-            console.log(chalk.yellow.bold(x.module && x.module.resource));
+            console.log(chalk.yellow.bold(x.file || (x.module && x.module.resource)));
             console.log(x.message
                         .replace(chalk.styles.red.open, chalk.styles.gray.close)
                         .replace(chalk.styles.red.close, chalk.styles.gray.close))
