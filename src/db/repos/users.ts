@@ -35,7 +35,7 @@ export class Repository {
     }
 
     public async remove(id: number) {
-        return this.db.result(sql.remove, id, (r: any) => r.rowcount)
+        return this.db.result(sql.remove, id, (r: any) => r.rowCount)
     }
 
     public async find(id: number) {
