@@ -26,7 +26,7 @@ class HomeController implements IController {
     @Get('/')
     private async index(req: IReq, res: IRes, next: Next) {
         try {
-            const index = await rFile(join('.', 'src/index.html'));
+            const index = await rFile(join('.', 'src/public/index.html'));
             res.writeHead(200);
             res.end(index);
             next()

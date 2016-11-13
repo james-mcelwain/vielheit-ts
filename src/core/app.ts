@@ -6,6 +6,7 @@ import IUserService from "../interfaces/user-service";
 import ICacheService from "../interfaces/cache-service";
 import ILogger from "../interfaces/logger";
 import ILoggerFactory from "../interfaces/logger-factory";
+import IIsomorphicReactService from "../interfaces/isomorphic-react-service";
 
 declare var process: any;
 
@@ -14,6 +15,7 @@ class App implements IApp {
     @inject(__.HTTPServer) httpServer: IHTTPServer;
     @inject(__.UserService) userService: IUserService;
     @inject(__.CacheService) cache: ICacheService;
+    @inject(__.IsomorphicReactService) react: IIsomorphicReactService;
 
     public logger: ILogger;
 
@@ -26,6 +28,7 @@ class App implements IApp {
         try {
             this.httpServer.onBootstrap(this.userService.onBootstrap.bind(this.userService));
             this.httpServer.onBootstrap(this.cache.onBootstrap.bind(this.cache))
+            this.httpServer.onBootstrap(this.react.onBootstrap.bind(this.react))
         } catch (e) {
             this.logger.fatal(e);
             process.exit(1)

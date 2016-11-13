@@ -21,15 +21,19 @@ class CacheService implements  ICacheService{
             this.logger.info('connecting to redis');
             this.client = createClient();
 
-            Reflect.get(this.client, 'on').call(this, 'ready', () => {
+            setTimeout(() => {
+                reject('failed to connect to redis in 2s')
+            }, 2000)
+
+            Reflect.get(this.client, 'on').call(this.client, 'connect', () => {
                 this.logger.info('connected');
                 resolve(true)
             });
-            Reflect.get(this.client, 'on').call(this, 'err', (err: Error) => {
+            Reflect.get(this.client, 'on').call(this.client, 'err', (err: Error) => {
                 this.logger.error(err);
                 reject(false)
             });
-            Reflect.get(this.client, 'on').call(this, 'reconnecting', (err: Error) =>
+            Reflect.get(this.client, 'on').call(this.client, 'reconnecting', (err: Error) =>
                 this.logger.info(`reconnecting ${err ? 'err=' + err : ''}`));
         })
     }

@@ -11,5 +11,8 @@
         "lib": ["es6"],
         "types": ["reflect-metadata", "node"],
         "strictNullChecks": true
-    }
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }

@@ -1,4 +1,4 @@
-import {Server, CORS, bodyParser, Response, Request, Next} from "restify";
+import {Server, CORS, bodyParser, Response, Request, Next, RequestHandler} from "restify";
 import {InversifyRestifyServer} from "inversify-restify-utils";
 import kernel from "../config/index";
 import {inject, injectable} from "inversify";
@@ -50,6 +50,13 @@ class HTTPServer implements IHttpServer {
         })
     }
 
+    private middleware: Array<RequestHandler> = [];
+    public registerMiddleware(handler: RequestHandler) {
+        console.log(this.middleware)
+        this.middleware = [handler]
+        console.log(this.middleware)
+    }
+
     public async listen(): Promise<void> {
         this.logger = this.LoggerFactory.getLogger(this);
 
@@ -57,6 +64,7 @@ class HTTPServer implements IHttpServer {
             await fn()
         }
 
+        const middleware = this.middleware
         this.server = <Server> this.router
             .setConfig((app: Server) => {
                 app.pre((req: Request, res: Response, next: Next) => {
@@ -68,6 +76,12 @@ class HTTPServer implements IHttpServer {
                 
                 app.use(CORS());
                 app.use(bodyParser())
+
+                console.log(middleware)
+                for (let handler of middleware) {
+                    console.log(handler.toString())
+                    app.use(handler)
+                }
             })
             .build();
 
