@@ -18,7 +18,10 @@ var HomeView = React.createClass({
         return <div>
             <h2>HomeView {loading}</h2>
             <Hello name="world" />
-            <div><Link to="/about">About</Link></div>
+            <div>
+                <Link to="/about">About</Link>
+                <Link to="/login">Login</Link>
+            </div>
         </div>;
     }
 });

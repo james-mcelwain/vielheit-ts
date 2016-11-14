@@ -35,7 +35,7 @@ class IsomorphicReactService {
                 } catch(e) {
                     console.log(':)', e)
                 }
-                const index = await readFileA(path.join('.', 'src/public/index.html'), 'utf-8')
+                const index = await readFileA(path.join('.', 'src/server/public/index.html'), 'utf-8')
                 res.writeHead(200);
                 res.end(index.replace(/{{ MARKUP }}/, reactMarkup));
             });

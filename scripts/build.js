@@ -10,11 +10,11 @@ const log = (err, stats) => {
         stats.compilation.errors.forEach((x, i) => {
             console.log(chalk.yellow.bold(x.file || (x.module && x.module.resource)));
             console.log(x.message
-                        .replace(chalk.styles.red.open, chalk.styles.gray.close)
-                        .replace(chalk.styles.red.close, chalk.styles.gray.close))
+                .replace(chalk.styles.red.open, chalk.styles.gray.close)
+                .replace(chalk.styles.red.close, chalk.styles.gray.close))
         })
     }
-}
+};
 
 module.exports = function Main(config) {
     const compiler = webpack(config);
@@ -28,7 +28,7 @@ module.exports = function Main(config) {
         }, (err, stats) => {
             log(err, stats)
         })
-    };
+    }
 
     compiler.run(log)
 };

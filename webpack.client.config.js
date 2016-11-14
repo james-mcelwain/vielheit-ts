@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack')
 
 module.exports = {
     target: 'node',
@@ -12,14 +13,31 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.tsx?$/, loader: "ts-loader", exclude: /node_modules/, query: {
+            {
+                test: /\.jsx?$/, loader: "babel-loader", exclude: /node_modules/, query: {
+                query: {
+                    presets: ['es2015', 'react']
+                }
+            } },
+            {
+                test: /\.tsx?$/, loader: "ts-loader", exclude: /node_modules/, query: {
                 configFileName: path.resolve(__dirname, 'tsconfig.client.json'),
             } },
-            { test: /\.json$/, loader: "json-loader" }
+            {
+                test: /\.json$/, loader: "json-loader"
+            },
         ],
 
         preLoaders: [
-            { test: /\.js$/, loader: "source-map-loader" },
+            {test: /\.js$/, loader: "source-map-loader"},
         ]
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify("dev")
+            }
+        })
+    ]
+
 };

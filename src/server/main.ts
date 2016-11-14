@@ -31,7 +31,3 @@ process.on('uncaughtException', (err: Error) => { app.logger.fatal(err); process
 process.on('unhandledRejection', (err: Error) => { app.logger.fatal(err); process.exit(1) });
 
 app.bootstrap();
-
-export default function graceful_shutdown() {
-    app.close()
-}
