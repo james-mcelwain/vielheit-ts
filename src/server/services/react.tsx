@@ -33,7 +33,6 @@ class IsomorphicReactService {
             match({routes, location: req.url}, async(err: Error, redirect, renderProps) => {
                 if (err) return next(new InternalServerError(err.message));
 
-                this.logger.info(...renderProps);
                 const reactMarkup = renderToStaticMarkup(<RouterContext {...renderProps}/>);
                 const index = await readFileA(path.join('.', 'src/server/public/index.html'), 'utf-8');
                 res.writeHead(200);

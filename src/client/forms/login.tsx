@@ -1,6 +1,7 @@
 import * as React from 'react';
-import {observer} from "mobx-react";
+import {observer, inject} from "mobx-react";
 import {observable} from "mobx";
+import {IUserStore} from "../stores/user";
 
 interface ILoginFormState {
     email: string
@@ -16,8 +17,8 @@ class LoginFormState implements ILoginFormState {
 
 const initialState = observable(new LoginFormState());
 
-@observer
-class LoginForm extends React.Component<{}, ILoginFormState> {
+@inject(({userStore}) => userStore)
+class LoginForm extends React.Component<{userStore?: IUserStore}, ILoginFormState> {
     private state: ILoginFormState = initialState;
 
     private onSubmit(e) {
@@ -27,6 +28,7 @@ class LoginForm extends React.Component<{}, ILoginFormState> {
 
     public render() {
         const {state} = this;
+        console.log(this.props)
         return (
             <form className="login-form"
                   onSubmit={this.onSubmit}>
