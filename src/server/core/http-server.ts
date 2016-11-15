@@ -63,7 +63,7 @@ class HTTPServer implements IHttpServer {
             await fn()
         }
 
-        const middleware = this.middleware
+        const middleware = this.middleware;
         this.server = <Server> this.router
             .setConfig((app: Server) => {
                 app.pre((req: Request, res: Response, next: Next) => {

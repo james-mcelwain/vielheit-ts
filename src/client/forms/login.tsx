@@ -1,37 +1,54 @@
 import * as React from 'react';
+import {observer} from "mobx-react";
+import {observable} from "mobx";
 
-const initialState = {
-    email: '',
-    password: '',
-    confirm: ''
-};
-
-interface ILoginForm {
+interface ILoginFormState {
     email: string
     password: string
     confirm: string
 }
 
-class LoginForm extends React.Component<{}, ILoginForm> {
-    private state: ILoginForm = initialState;
+class LoginFormState implements ILoginFormState {
+    public email = '';
+    public password = '';
+    public confirm = ';'
+}
 
-    onSubmit() {
+const initialState = observable(new LoginFormState());
 
+@observer
+class LoginForm extends React.Component<{}, ILoginFormState> {
+    private state: ILoginFormState = initialState;
+
+    private onSubmit(e) {
+        e.preventDefault();
+        console.log(this.state)
     }
 
     public render() {
+        const {state} = this;
         return (
-            <form onSubmit={this.onSubmit}>
+            <form className="login-form"
+                  onSubmit={this.onSubmit}>
                 <label> Email
-                    <input type="text"/>
+                    <input type="text"
+                           name="email"
+                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           value={state.email}/>
                 </label>
 
                 <label> Password:
-                    <input type="password" />
+                    <input type="password"
+                           name="password"
+                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           value={state.password}/>
                 </label>
 
                 <label> Confirm:
-                    <input type="password" />
+                    <input type="password"
+                           name="confirm"
+                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           value={state.confirm}/>
                 </label>
 
                 <button type="submit">Login</button>

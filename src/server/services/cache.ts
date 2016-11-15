@@ -23,7 +23,7 @@ class CacheService implements ICacheService{
 
             setTimeout(() => {
                 reject('failed to connect to redis in 2s')
-            }, 2000)
+            }, 2000);
 
             Reflect.get(this.client, 'on').call(this.client, 'connect', () => {
                 this.logger.info('connected');

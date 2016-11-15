@@ -27,7 +27,7 @@ class App implements IApp {
         this.logger.info('starting services');
         try {
             this.httpServer.onBootstrap(this.userService.onBootstrap.bind(this.userService));
-            this.httpServer.onBootstrap(this.cache.onBootstrap.bind(this.cache))
+            this.httpServer.onBootstrap(this.cache.onBootstrap.bind(this.cache));
             this.httpServer.onBootstrap(this.react.onBootstrap.bind(this.react))
         } catch (e) {
             this.logger.fatal(e);

@@ -15,29 +15,26 @@ import IReq from "../interfaces/req";
 let readFileA = promisify(readFile);
 
 @injectable()
-@Controller('/')
-class HomeController implements IController {
+@Controller('/public')
+class PublicController implements IController {
     private logger: ILogger;
 
     constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
         this.logger = LoggerFactory.getLogger(this)
     }
 
-    /**
-     @Get('/')
-     private async index(req: IReq, res: IRes, next: Next) {
+    @Get('/css/styles.css')
+    private async styles(req: IReq, res: IRes, next: Next) {
         try {
-            const index = await readFileA(join('.', 'src/public/index.html'));
-            res.writeHead(200);
-            res.end(index);
-            next()
+            const styles = await readFileA(join('.', 'src/server/public/styles.css'));
+            res.writeHead(200, { 'Cache-Control': 'no-cache' });
+            res.end(styles);
         } catch (e) {
-            next (new InternalServerError(e))
+            next(new InternalServerError(e))
         }
     }
-     */
 
-    @Get('/public/js/bundle.js')
+    @Get('/js/bundle.js')
     private async bundle(req: IReq, res: IRes, next: Next) {
         try {
             const bundle = await readFileA(join('.', 'dist/bundle.js'), 'utf8');
@@ -50,4 +47,4 @@ class HomeController implements IController {
     }
 }
 
-export default HomeController
+export default PublicController

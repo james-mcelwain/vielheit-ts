@@ -1,5 +1,5 @@
 const path = require('path');
-const webpack = require('webpack')
+const webpack = require('webpack');
 
 module.exports = {
     target: 'node',
@@ -36,7 +36,8 @@ module.exports = {
         new webpack.DefinePlugin({
             "process.env": {
                 NODE_ENV: JSON.stringify("dev")
-            }
+            },
+            'global': {},
         })
     ]
 

@@ -5,7 +5,6 @@ import DatabaseProvider from "../db";
 import {IDatabase} from "pg-promise";
 import {TYPE} from "inversify-restify-utils";
 import IController from "../interfaces/controller";
-import HomeController from "../controllers/index";
 import UsersController from "../controllers/users";
 import {IExtensions} from "../db/index";
 import IApp from "../interfaces/app";
@@ -22,6 +21,7 @@ import ICacheService from "../interfaces/cache-service";
 import CacheService from "../services/cache";
 import IsomorphicReactService from "../services/react";
 import IIsomorphicReactService from "../interfaces/isomorphic-react-service";
+import PublicController from "../controllers/public";
 
 const kernel = new Kernel();
 
@@ -87,12 +87,12 @@ kernel.bind<IIsomorphicReactService>(__.IsomorphicReactService)
 
 // ROUTES
 
-// Home -
+// Public-
 // Serves core assets and application, index.html, etc.
 kernel
     .bind<IController>(<any> TYPE.Controller)
-    .to(HomeController)
-    .whenTargetNamed('HomeController');
+    .to(PublicController)
+    .whenTargetNamed('PublicController');
 
 // Users -
 // Core API for dealing with users / authentication

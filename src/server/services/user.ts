@@ -36,11 +36,11 @@ class UserService implements IUserService {
         await this.db.users.createUsersView();
     }
 
-    public async findByEmail(email: string): Promise<IUser> {
+    public async findByEmail(email: string): Promise<IUser | null> {
         return this.db.users.findByEmail(email);
     }
 
-    public async findById(id: number | string): Promise<IUser> {
+    public async findById(id: string): Promise<IUser> {
         return this.db.users.find(+id);
     }
 

@@ -37,7 +37,7 @@ class SessionService implements ISessionService {
 
                 resolve(decoded)
             })
-        })
+        });
 
         return p
     }
