@@ -8,7 +8,7 @@ export class UserStore implements IUserStore {
     public user: IUser;
 
     public async authenticateUser(addUserReq: IAddUserReq): void {
-        this.user = <IUser> await http.post('/ap/users/authenticate', addUserReq)
+        this.user = <IUser> await http.post('/api/users/authenticate', addUserReq)
     }
 }
 

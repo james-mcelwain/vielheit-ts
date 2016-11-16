@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {observer, inject} from "mobx-react";
+import {inject} from "mobx-react";
 import {observable} from "mobx";
 import {IUserStore} from "../stores/user";
 
@@ -17,21 +17,21 @@ class LoginFormState implements ILoginFormState {
 
 const initialState = observable(new LoginFormState());
 
-@inject(({userStore}) => userStore)
+@inject(({userStore}) => ({userStore}))
 class LoginForm extends React.Component<{userStore?: IUserStore}, ILoginFormState> {
     private state: ILoginFormState = initialState;
 
-    private onSubmit(e) {
+    private async onSubmit(e) {
         e.preventDefault();
-        console.log(this.state)
+        const { email, password } = this.state;
+        const res = await this.props.userStore.authenticateUser({email, password}).catch( /* TODO: Error handling */ );
     }
 
     public render() {
         const {state} = this;
-        console.log(this.props)
         return (
             <form className="login-form"
-                  onSubmit={this.onSubmit}>
+                  onSubmit={this.onSubmit.bind(this)}>
                 <label> Email
                     <input type="text"
                            name="email"
