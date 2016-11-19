@@ -1,5 +1,10 @@
+#!/usr/bin/env node
+
 const webpack = require('webpack');
+const WebpackWatcher = require('webpack-watcher');
 const chalk = require('chalk');
+const config = require('../webpack.config');
+const child_process = require('child_process');
 
 const log = (err, stats) => {
     if (err) {
@@ -16,19 +21,23 @@ const log = (err, stats) => {
     }
 };
 
-module.exports = function Main(config) {
+let activeServer = null;
+
+void function Main() {
     const compiler = webpack(config);
 
-    let [,, watch] = process.argv;
+    const [,, watch] = process.argv;
 
     if (watch === '--watch' || watch === '-w') {
-        return compiler.watch({
-            aggregateTimeout: 300,
-            poll: false,
-        }, (err, stats) => {
-            log(err, stats)
+        const startServer = () => child_process.execSync('npm start', { stdio: [0, 1, 2] });
+        const watcher = new WebpackWatcher(compiler);
+
+        return watcher.onceDone(function(err, stats) {
+            if (activeServer) activeServer.kill();
+            activeServer = startServer();
         })
     }
 
     compiler.run(log)
-};
+}();
+

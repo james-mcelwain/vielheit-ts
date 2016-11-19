@@ -9,7 +9,7 @@ class UsersController_authenticate {
     password: string = '';
 }
 
-class UsersController_create implements IAddUserReq {
+class UsersController_add implements IAddUserReq {
   @IsLength(3, 20)
   fname: string = '';
 
@@ -29,7 +29,7 @@ class UsersController_create implements IAddUserReq {
 
 const _validators = {
   UsersController_authenticate, 
-  UsersController_create,
+  UsersController_add,
 };
 
 const validators = new Proxy(_validators, {

@@ -2,7 +2,6 @@ import {IDatabase} from "pg-promise";
 import {injectable, inject} from "inversify";
 import {hash, compare} from "bcrypt";
 import {Validator} from "validator.ts/Validator";
-import {IsLength, IsEmail, IsNumeric} from "validator.ts/decorator/Validation";
 import {promisify} from "bluebird";
 import __ from "../config/constants";
 import {IExtensions} from "../db";
@@ -13,11 +12,9 @@ import ILoggerFactory from "../interfaces/logger-factory";
 import IUser from "../interfaces/user";
 import {IAddUserReq} from "../interfaces/user-service";
 
-const validator = new Validator();
 const SALT_WORK_FACTOR = 10;
 const hashAsync = promisify(hash);
 const compareAsync = promisify(compare);
-
 
 @injectable()
 class UserService implements IUserService {

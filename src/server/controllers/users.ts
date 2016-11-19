@@ -38,16 +38,12 @@ class UsersController implements IController {
     private async add(req: IReq, res: IRes, next: Next): IAddUserRes {
         const addUserReq = <IAddUserReq> req.body;
         const id = await this.userService.add(req.body);
-        const user = await this.userService.findById(id);
-        res.send(200, user);
-        return next()
+        return await this.userService.findById(id);
     }
 
     @Post('/empty')
     private async empty(req: IReq, res: IRes, next: Next) {
-        await this.userService.empty();
-        res.send(200);
-        return next();
+        return await this.userService.empty();
     }
 
     @Validate

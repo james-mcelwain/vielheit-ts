@@ -73,7 +73,7 @@ class HTTPServer implements IHttpServer {
                     next()                    
                 });
                 
-                app.use(CORS());
+                app.use(bodyParser());
                 for (let handler of middleware) {
                     app.pre(handler)
                 }

@@ -34,7 +34,7 @@ export default function Valdiate(target: any, propertyKey: string, descriptor: T
    
             // if it passes validation, call the request with the original argmuents (i.e, req, res, next) -- 
             // proceed as normal            
-            method.call(this, ...args)
+            return method.call(this, ...args)
         } catch (e) {
             // if we catch a vliadtion error, send it to the 400 error handler 
             if (e.name === 'ValidationError') {

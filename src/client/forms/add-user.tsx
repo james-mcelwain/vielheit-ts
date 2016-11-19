@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {inject} from "mobx-react";
-import {observable} from "mobx";
+import {inject, observer} from "mobx-react";
+import {observable, IObservableValue} from "mobx";
 import {IUserStore} from "../stores/user";
 
 interface IAddUserFormState {
@@ -12,24 +12,26 @@ interface IAddUserFormState {
     confirm: string
 }
 
-class LoginFormState implements IAddUserFormState {
+class AddUserFormState implements IAddUserFormState {
     public username = '';
     public fname = '';
     public lname = '';
     public email = '';
     public password = '';
-    public confirm = ';'
+    public confirm = '';
 }
 
-const initialState = observable(new LoginFormState());
-
-@inject(({userStore}) => ({userStore}))
-class LoginForm extends React.Component<{userStore?: IUserStore}, IAddUserFormState> {
-    private state: IAddUserFormState = initialState;
+@observer(['userStore'])
+class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserFormState>{
+    private state: IAddUserFormState = new AddUserFormState();
 
     private async onSubmit(e) {
         e.preventDefault();
         const res = await this.props.userStore.addUser(this.state).catch( /* TODO: Error handling */ );
+    }
+
+    private handleChange(e: any) {
+        this.setState({ [e.target.name]: e.target.value })
     }
 
     public render() {
@@ -40,42 +42,42 @@ class LoginForm extends React.Component<{userStore?: IUserStore}, IAddUserFormSt
                 <label> Username
                     <input type="text"
                            name="username"
-                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           onChange={this.handleChange.bind(this)}
                            value={state.username}/>
                 </label>
 
                 <label> First Name
                     <input type="text"
                            name="fname"
-                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           onChange={this.handleChange.bind(this)}
                            value={state.fname}/>
                 </label>
 
                 <label> Last Name
                     <input type="text"
                            name="lname"
-                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           onChange={this.handleChange.bind(this)}
                            value={state.lname}/>
                 </label>
 
                 <label> Email
                     <input type="text"
                            name="email"
-                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           onChange={this.handleChange.bind(this)}
                            value={state.email}/>
                 </label>
 
                 <label> Password:
                     <input type="password"
                            name="password"
-                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           onChange={this.handleChange.bind(this)}
                            value={state.password}/>
                 </label>
 
                 <label> Confirm:
                     <input type="password"
                            name="confirm"
-                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           onChange={this.handleChange.bind(this)}
                            value={state.confirm}/>
                 </label>
 
@@ -85,4 +87,4 @@ class LoginForm extends React.Component<{userStore?: IUserStore}, IAddUserFormSt
     }
 }
 
-export default LoginForm
+export default AddUserForm

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {inject} from "mobx-react";
+import {inject, observer} from "mobx-react";
 import {observable} from "mobx";
 import {IUserStore} from "../stores/user";
 
@@ -12,19 +12,21 @@ interface ILoginFormState {
 class LoginFormState implements ILoginFormState {
     public email = '';
     public password = '';
-    public confirm = ';'
+    public confirm = '';
 }
 
-const initialState = observable(new LoginFormState());
-
-@inject(({userStore}) => ({userStore}))
+@observer(['userStore'])
 class LoginForm extends React.Component<{userStore?: IUserStore}, ILoginFormState> {
-    private state: ILoginFormState = initialState;
+    private state: ILoginFormState = new LoginFormState();
 
     private async onSubmit(e) {
         e.preventDefault();
         const { email, password } = this.state;
         const res = await this.props.userStore.authenticateUser({email, password}).catch( /* TODO: Error handling */ );
+    }
+
+    private handleChange(e: any) {
+        this.setState({ [e.target.name]: e.target.value })
     }
 
     public render() {
@@ -35,21 +37,21 @@ class LoginForm extends React.Component<{userStore?: IUserStore}, ILoginFormStat
                 <label> Email
                     <input type="text"
                            name="email"
-                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           onChange={this.handleChange.bind(this)}
                            value={state.email}/>
                 </label>
 
                 <label> Password:
                     <input type="password"
                            name="password"
-                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           onChange={this.handleChange.bind(this)}
                            value={state.password}/>
                 </label>
 
                 <label> Confirm:
                     <input type="password"
                            name="confirm"
-                           onChange={e => Reflect.set(state, e.target.name, e.target.value)}
+                           onChange={this.handleChange.bind(this)}
                            value={state.confirm}/>
                 </label>
 
