@@ -12,6 +12,8 @@ import ILogger from "../interfaces/logger";
 import ILoggerFactory from "../interfaces/logger-factory";
 import IRes from "../interfaces/res";
 import IReq from "../interfaces/req";
+import {IAddUserReq, IAuthenticateUserReq} from "../../domain/request/user";
+import {IAuthenticateUserRes, IAddUserRes} from "../../domain/response/user";
 
 @injectable()
 @Controller(`${API_BASE}/users`)
@@ -33,7 +35,8 @@ class UsersController implements IController {
 
     @Validate
     @Post('/add')
-    private async create(req: IReq, res: IRes, next: Next) {
+    private async add(req: IReq, res: IRes, next: Next): IAddUserRes {
+        const addUserReq = <IAddUserReq> req.body;
         const id = await this.userService.add(req.body);
         const user = await this.userService.findById(id);
         res.send(200, user);
@@ -49,15 +52,14 @@ class UsersController implements IController {
 
     @Validate
     @Post('/authenticate')
-    private async authenticate(req: IReq, res: IRes, next: Next) {
-        const user = await this.userService.findByEmail(req.body.email);
+    private async authenticate(req: IReq, res: IRes, next: Next): IAuthenticateUserRes {
+        const authenticateUserReq = <IAuthenticateUserReq> req.body;
+        const user = await this.userService.findByEmail(authenticateUserReq.email);
         if (!user) {
             return next(new BadRequestError('User not found'))
         }
 
-        const session = await this.userService.authenticate(req.body.password, user);
-        res.send({id_token: session});
-        return next()
+        return await this.userService.authenticate(req.body.password, user);
     }
 }
 

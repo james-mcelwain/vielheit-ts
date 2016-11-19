@@ -1,20 +1,25 @@
 import {observable} from "mobx";
 import IUser from "../../server/interfaces/user"; // TODO move to domain
-import {IAddUserReq} from "../../server/interfaces/user-service";
-import {authenticateUser} from "../http";
+import {authenticateUser, addUser} from "../http";
+import {IAuthenticateUserReq, IAddUserReq} from "../../domain/request/user";
 
 export class UserStore implements IUserStore {
     @observable
     public user: IUser;
 
-    public async authenticateUser(addUserReq: IAddUserReq): void {
-        this.user = <IUser> await authenticateUser(addUserReq)
+    public async authenticateUser(authenticateUserReq: IAddUserReq): void {
+        this.user = <IUser> await authenticateUser(authenticateUserReq)
+    }
+
+    public  async addUser(addUserReq: IAddUserReq): void {
+        await addUser(addUserReq)
     }
 }
 
 export interface IUserStore {
     user: IUser
 
-    authenticateUser(addUserReq: IAddUserReq): void
+    authenticateUser(authenticateUserReq: IAuthenticateUserReq): void
+    addUser(addUserReq: IAddUserReq): void
 }
 

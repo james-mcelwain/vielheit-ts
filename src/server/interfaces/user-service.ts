@@ -1,4 +1,5 @@
 import IUser from "./user";
+import {IAddUserReq} from "../../domain/request/user";
 
 interface IUserService {
     getAll: () => any
@@ -9,11 +10,6 @@ interface IUserService {
     findById: (id: string | number) => Promise<IUser>
     empty: () => any
     onBootstrap: () => any
-}
-
-export interface IAddUserReq {
-   email: string
-   password: string
 }
 
 export default IUserService

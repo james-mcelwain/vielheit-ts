@@ -84,32 +84,4 @@ class UserService implements IUserService {
     }
 }
 
-class ValidateUserReq {
-    @IsNumeric()
-    _id: string;
-    set id(id: number) {
-        this._id = id + ''
-    }
-
-    @IsLength(6, 20)
-    password: string
-}
-
-export class User {
-    @IsLength(6, 20)
-    username: string;
-
-    @IsEmail()
-    email: string;
-
-    @IsLength(6, 20)
-    password: string;
-
-    @IsLength(3, 20)
-    fname: string;
-
-    @IsLength(3, 20)
-    lname: string;
-}
-
 export default UserService
