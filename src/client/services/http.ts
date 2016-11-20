@@ -2,6 +2,8 @@ import * as http from 'axios';
 import {observable} from "mobx";
 import IServiceReq from "../../domain/request/service-request";
 import {API_BASE} from "../../server/config/constants";
+import IHttpError from "../interfaces/http-error";
+import IHttpService from "../interfaces/http-service";
 
 export class HttpService implements IHttpService {
     @observable
@@ -16,9 +18,8 @@ export class HttpService implements IHttpService {
     private async doRequest(method, url, payload: IServiceReq = {}) {
         const res = await http[method](`${API_BASE}/${url}`, payload, this.httpOpts);
         if (res.status === 400) {
-            this.httpErrors = JSON.parse(res.data.message).errors
+            JSON.parse(res.data.message).errors.forEach(this.httpErrors.push)
         }
-        console.log(res)
         return res
     }
 
@@ -43,20 +44,4 @@ export class HttpService implements IHttpService {
     }
 }
 
-export interface IHttpService {
-    httpErrors: IHttpError[]
-    clearErrors()
-    getErrorMessage(): string
-    get(url: string)
-    post(url: string, payload: IServiceReq)
-    put(url: string, payload: IServiceReq)
-}
-
-export interface IHttpError {
-    property: string
-    errorCode: number
-    errorName: string
-    value: string
-    required: number
-}
 

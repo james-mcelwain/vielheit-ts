@@ -1,7 +1,7 @@
 import {observable} from "mobx";
 import IUser from "../../server/interfaces/user"; // TODO move to domain
 import {IAuthenticateUserReq, IAddUserReq} from "../../domain/request/user";
-import {IHttpService} from "./http";
+import {IHttpService} from "../services/http";
 
 export class UserStore implements IUserStore {
     @observable
