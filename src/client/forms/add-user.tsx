@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {inject, observer} from "mobx-react";
-import {observable, IObservableValue} from "mobx";
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton'
 import {IUserStore} from "../stores/user";
 
 interface IAddUserFormState {
@@ -22,16 +23,16 @@ class AddUserFormState implements IAddUserFormState {
 }
 
 @observer(['userStore'])
-class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserFormState>{
+class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserFormState> {
     private state: IAddUserFormState = new AddUserFormState();
 
     private async onSubmit(e) {
         e.preventDefault();
-        const res = await this.props.userStore.addUser(this.state).catch( /* TODO: Error handling */ );
+        const res = await this.props.userStore.addUser(this.state).catch(/* TODO: Error handling */);
     }
 
     private handleChange(e: any) {
-        this.setState({ [e.target.name]: e.target.value })
+        this.setState({[e.target.name]: e.target.value})
     }
 
     public render() {
@@ -39,49 +40,62 @@ class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserForm
         return (
             <form className="login-form"
                   onSubmit={this.onSubmit.bind(this)}>
-                <label> Username
-                    <input type="text"
-                           name="username"
-                           onChange={this.handleChange.bind(this)}
-                           value={state.username}/>
-                </label>
+                <TextField
+                    hintText="Username"
+                    type="text"
+                    name="username"
+                    onChange={this.handleChange.bind(this)}
+                    value={state.username}/>
 
-                <label> First Name
-                    <input type="text"
-                           name="fname"
-                           onChange={this.handleChange.bind(this)}
-                           value={state.fname}/>
-                </label>
+                <br/>
 
-                <label> Last Name
-                    <input type="text"
-                           name="lname"
-                           onChange={this.handleChange.bind(this)}
-                           value={state.lname}/>
-                </label>
+                <TextField
+                    hintText="First Name"
+                    type="text"
+                    name="fname"
+                    onChange={this.handleChange.bind(this)}
+                    value={state.fname}/>
 
-                <label> Email
-                    <input type="text"
-                           name="email"
-                           onChange={this.handleChange.bind(this)}
-                           value={state.email}/>
-                </label>
+                <br/>
 
-                <label> Password:
-                    <input type="password"
-                           name="password"
-                           onChange={this.handleChange.bind(this)}
-                           value={state.password}/>
-                </label>
+                <TextField
+                    hintText="Last Name"
+                    type="text"
+                    name="lname"
+                    onChange={this.handleChange.bind(this)}
+                    value={state.lname}/>
 
-                <label> Confirm:
-                    <input type="password"
-                           name="confirm"
-                           onChange={this.handleChange.bind(this)}
-                           value={state.confirm}/>
-                </label>
+                <br/>
 
-                <button type="submit">Register</button>
+                <TextField
+                    hintText="Email"
+                    type="text"
+                    name="email"
+                    onChange={this.handleChange.bind(this)}
+                    value={state.email}/>
+
+                <br/>
+
+                <TextField
+                    hintText="Password"
+                    type="password"
+                    name="password"
+                    onChange={this.handleChange.bind(this)}
+                    value={state.password}/>
+
+                <br/>
+
+                <TextField
+                    hintText="Confirm"
+                    type="password"
+                    name="confirm"
+                    onChange={this.handleChange.bind(this)}
+                    value={state.confirm}/>
+
+                <br/>
+                <br/>
+
+                <RaisedButton type="submit">Register</RaisedButton>
             </form>
         );
     }

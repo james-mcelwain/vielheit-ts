@@ -18,8 +18,8 @@ import {IAuthenticateUserRes, IAddUserRes} from "../../domain/response/user";
 @injectable()
 @Controller(`${API_BASE}/users`)
 class UsersController implements IController {
-    @inject(__.UserService) userService: IUserService;
-    @inject(__.Database) db: IDatabase<IExtensions>&IExtensions;
+    @inject(__.UserService)
+    private userService: IUserService;
     private logger: ILogger;
 
 

@@ -37,6 +37,7 @@
     "inversify-restify-utils": "^2.0.1",
     "json-loader": "^0.5.4",
     "jsonwebtoken": "^7.1.9",
+    "material-ui": "^0.16.4",
     "mobx": "^2.5.2",
     "mobx-react": "^3.5.7",
     "mobx-react-form": "^1.13.24",

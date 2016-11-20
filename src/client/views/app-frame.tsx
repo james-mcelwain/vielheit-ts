@@ -3,6 +3,7 @@ const ReactToastr: any = require('react-toastr')
 import {inject} from 'mobx-react';
 import {autorun} from "mobx";
 import {IHttpService} from "../stores/http";
+import AppBar from 'material-ui/AppBar';
 
 const {ToastContainer} = ReactToastr;
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation);
@@ -29,7 +30,7 @@ export default class AppFrame extends React.Component<{httpService?: IHttpServic
             <ToastContainer ref="container"
                             toastMessageFactory={ToastMessageFactory}
                             className="toast-top-right"/>
-            <h1>App</h1>
+            <h1>Vielheit</h1>
             {this.props.children}
         </div>;
     }

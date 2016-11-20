@@ -5,6 +5,8 @@ import routes from './routes';
 import {Provider} from "mobx-react";
 import {UserStore} from "./stores/user";
 import {HttpService} from "./stores/http";
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 
 /*
  We create httpService as a singleton that was can use it as an
@@ -18,7 +20,9 @@ const userStore = new UserStore(httpService)
 
 const app =
     <Provider userStore={userStore} httpService={httpService}>
-        <Router history={browserHistory}>{routes}</Router>
+        <MuiThemeProvider>
+            <Router history={browserHistory}>{routes}</Router>
+        </MuiThemeProvider>
     </Provider>;
 
 ReactDOM.render(app, document.getElementById('app'));
