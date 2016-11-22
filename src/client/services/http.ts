@@ -4,6 +4,7 @@ import IServiceReq from "../../domain/request/service-request";
 import {API_BASE} from "../../server/config/constants";
 import IHttpError from "../interfaces/http-error";
 import IHttpService from "../interfaces/http-service";
+import ISessionService from "../../server/interfaces/session-service";
 
 export class HttpService implements IHttpService {
     @observable
@@ -14,6 +15,12 @@ export class HttpService implements IHttpService {
             return (status >= 200 && status < 300) || status === 400
         }
     };
+
+    private sessionService: ISessionService;
+
+    public constructor(sessionService: ISessionService) {
+        this.sessionService = sessionService;
+    }
 
     private async doRequest(method, url, payload: IServiceReq = {}) {
         const res = await http[method](`${API_BASE}/${url}`, payload, this.httpOpts);
