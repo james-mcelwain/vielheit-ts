@@ -1,10 +1,10 @@
 import IHttpService from "../interfaces/http-service";
 import ISessionService from "../interfaces/session-service";
 
-class SessionService extends ISessionService{
+class SessionService implements ISessionService{
     private httpService: IHttpService;
 
-    constructor(httpService: IHttpService) {
+    public constructor(httpService: IHttpService) {
         this.httpService = httpService;
     }
 
@@ -20,3 +20,5 @@ class SessionService extends ISessionService{
 
     }
 }
+
+export default SessionService

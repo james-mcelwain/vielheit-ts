@@ -12,8 +12,8 @@ import ILogger from "../interfaces/logger";
 import ILoggerFactory from "../interfaces/logger-factory";
 import IRes from "../interfaces/res";
 import IReq from "../interfaces/req";
-import {IAddUserReq, IAuthenticateUserReq} from "../../domain/request/user";
-import {IAuthenticateUserRes, IAddUserRes} from "../../domain/response/user";
+import {IAddUserReq, IAuthenticateUserReq, IFindEmailReq} from "../../domain/request/user";
+import {IAuthenticateUserRes, IAddUserRes, IFindEmailRes} from "../../domain/response/user";
 
 @injectable()
 @Controller(`${API_BASE}/users`)
@@ -29,14 +29,25 @@ class UsersController implements IController {
 
     @Get('/')
     private async get(req: IReq, res: IRes, next: Next) {
-        const users = await this.userService.getAll();
-        return users;
+        return await this.userService.getAll();
+    }
+
+    @Post('/find-email')
+    private async findEmail(req: IReq, res: IRes, next: Next): Promise<IFindEmailRes> {
+        const findEmailReq = <IFindEmailReq> req.body;
+        const user = await this.userService.findByEmail(findEmailReq.email);
+        return { exists: user? true: false }
     }
 
     @Validate
     @Post('/add')
-    private async add(req: IReq, res: IRes, next: Next): IAddUserRes {
+    private async add(req: IReq, res: IRes, next: Next): Promise<IAddUserRes> {
         const addUserReq = <IAddUserReq> req.body;
+        const emailExists = await this.userService.findByEmail(addUserReq.email);
+        if (emailExists) {
+            return next(new BadRequestError('Email already exists'))
+        }
+
         const id = await this.userService.add(req.body);
         return await this.userService.findById(id);
     }

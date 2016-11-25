@@ -6,6 +6,7 @@ import {join} from "path";
 import {readFile} from "fs";
 import {promisify} from "bluebird";
 import IController from "../interfaces/controller";
+import __ from "../config/constants";
 import ILogger from "../interfaces/logger";
 import ILoggerFactory from "../interfaces/logger-factory";
 import IRes from "../interfaces/res";
@@ -38,7 +39,7 @@ class PublicController implements IController {
     private async styles(req: IReq, res: IRes, next: Next) {
         try {
             const styles = await readFileA(join('.', 'src/server/public/styles.css'));
-            res.writeHead(200, { 'Cache-Control': 'no-cache' });
+            res.writeHead(200, { 'Cache-Control': 'no-cache', 'Content-Type': 'text/css' });
             res.end(styles);
         } catch (e) {
             next(new InternalServerError(e))

@@ -1,6 +1,6 @@
 import {observable} from "mobx";
 import IUser from "../../server/interfaces/user"; // TODO move to tomain
-import {IAuthenticateUserReq, IAddUserReq} from "../../domain/request/user";
+import {IAuthenticateUserReq, IAddUserReq, IFindEmailReq} from "../../domain/request/user";
 import IHttpService from "../interfaces/http-service";
 
 export class UserStore implements IUserStore {
@@ -20,6 +20,11 @@ export class UserStore implements IUserStore {
     public  async addUser(addUserReq: IAddUserReq): void {
         const res = await this.httpService.post('users/add', addUserReq);
     }
+
+    public async findEmail(findEmailReq: IFindEmailReq) {
+        const res = await this.httpService.post('users/find-email', findEmailReq);
+        return res.exists
+    }
 }
 
 export interface IUserStore {
@@ -27,5 +32,6 @@ export interface IUserStore {
 
     authenticateUser(authenticateUserReq: IAuthenticateUserReq): void
     addUser(addUserReq: IAddUserReq): void
+    findEmail(findEmailReq: IFindEmailReq)
 }
 

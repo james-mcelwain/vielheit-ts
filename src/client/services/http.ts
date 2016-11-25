@@ -4,7 +4,7 @@ import IServiceReq from "../../domain/request/service-request";
 import {API_BASE} from "../../server/config/constants";
 import IHttpError from "../interfaces/http-error";
 import IHttpService from "../interfaces/http-service";
-import ISessionService from "../../server/interfaces/session-service";
+import ISessionService from "../interfaces/session-service";
 
 export class HttpService implements IHttpService {
     @observable
@@ -31,11 +31,12 @@ export class HttpService implements IHttpService {
             }, httpOpts);
         }
 
-        const res = await http[method](`${API_BASE}/${url}`, payload, this.httpOpts);
+        const res = await http[method](`${API_BASE}${url}`, payload, this.httpOpts);
         if (res.status === 400) {
-            JSON.parse(res.data.message).errors.forEach(this.httpErrors.push)
+            console.log(res)
+            JSON.parse(res.data.message).errors.forEach(x => this.httpErrors.push(x))
         }
-        return res
+        return res.data
     }
 
     public clearErrors(): void {

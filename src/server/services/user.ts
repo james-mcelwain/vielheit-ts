@@ -46,13 +46,12 @@ class UserService implements IUserService {
     }
 
     public async add(req: IAddUserReq): Promise<number> {
-        const emailExists = await this.db.users.findByEmail(req.email);
-        if (emailExists) {
+        const userExists = await this.findByEmail(req.email);
+        if (userExists) {
             throw new Error('Email already exists')
         }
 
         req.password = await hashAsync(req.password, SALT_WORK_FACTOR);
-
         return await this.db.users.add(req);
     }
 

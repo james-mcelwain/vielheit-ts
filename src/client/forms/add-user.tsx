@@ -3,6 +3,7 @@ import {inject, observer} from "mobx-react";
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton'
 import {IUserStore} from "../stores/user";
+import {observable} from "mobx";
 
 interface IAddUserFormState {
     username: string
@@ -31,7 +32,20 @@ class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserForm
         const res = await this.props.userStore.addUser(this.state).catch(/* TODO: Error handling */);
     }
 
+    @observable
+    private emailError = null;
+
     private handleChange(e: any) {
+        if (e.target.name === 'email' && /@/.test(e.target.value)) {
+            this.props.userStore.findEmail({ email: e.target.value }).then(x => {
+                if (x) {
+                    this.emailError = 'Email already taken';
+                } else {
+                    this.emailError = null;
+                }
+            })
+        }
+
         this.setState({[e.target.name]: e.target.value})
     }
 
@@ -71,9 +85,9 @@ class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserForm
                     hintText="Email"
                     type="text"
                     name="email"
+                    errorText={this.emailError}
                     onChange={this.handleChange.bind(this)}
                     value={state.email}/>
-
                 <br/>
 
                 <TextField

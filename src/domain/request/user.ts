@@ -13,3 +13,7 @@ export interface IAddUserReq extends IServiceReq {
     password: string
 }
 
+
+export interface IFindEmailReq extends IServiceReq {
+   email: string
+}
