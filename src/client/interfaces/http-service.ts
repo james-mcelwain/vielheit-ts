@@ -1,16 +1,15 @@
 import IServiceReq from "../../domain/request/service-request";
 import IHttpError from "./http-error";
 import ISessionService from "../interfaces/session-service";
+import IServiceRes from "../../domain/response/service-response";
 
 interface IHttpService {
-    constructor(sessionService: ISessionService)
-
     httpErrors: IHttpError[]
-    clearErrors()
+    clearErrors(): void
     getErrorMessage(): string
-    get(url: string)
-    post(url: string, payload: IServiceReq)
-    put(url: string, payload: IServiceReq)
+    get(url: string): Promise<IServiceRes>
+    post(url: string, payload: IServiceReq): Promise<IServiceRes>
+    put(url: string, payload: IServiceReq): Promise<IServiceRes>
     getSessionService(): ISessionService
 }
 

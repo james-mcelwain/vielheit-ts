@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import {Router, browserHistory} from 'react-router';
 import routes from './routes';
 import {Provider} from "mobx-react";
-import {UserStore} from "./stores/user";
+import UserStore from "./stores/user";
 import {HttpService} from "./services/http";
 import SessionService from "./services/session";
 

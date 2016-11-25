@@ -3,7 +3,7 @@ import Loading from './loading';
 import LoginForm from "../forms/login";
 
 class LoginView extends React.Component<{}, {loaded: boolean}>{
-    private state = {
+    public state = {
         loaded: false
     };
 
@@ -12,7 +12,7 @@ class LoginView extends React.Component<{}, {loaded: boolean}>{
         this.setState({ loaded: true });
     }
 
-    private render() {
+    public render() {
         return this.state.loaded? <LoginForm/> : <Loading/>
     }
 }

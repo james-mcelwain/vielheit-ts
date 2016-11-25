@@ -1,9 +1,9 @@
 import IHttpService from "./http-service";
 
 interface ISessionService {
-    constructor(httpService: IHttpService)
-
-    getSession()
-    setSession()
-    clearSession()
+    getSession(): string
+    setSession(): void
+    clearSession(): boolean
 }
+
+export default ISessionService;

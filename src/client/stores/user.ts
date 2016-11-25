@@ -1,9 +1,11 @@
 import {observable} from "mobx";
-import IUser from "../../server/interfaces/user"; // TODO move to tomain
-import {IAuthenticateUserReq, IAddUserReq, IFindEmailReq} from "../../domain/request/user";
+import {IAddUserReq, IFindEmailReq} from "../../domain/request/user";
 import IHttpService from "../interfaces/http-service";
+import {IAuthenticateUserRes, IFindEmailRes} from "../../domain/response/user";
+import IUser from "../../domain/user";
+import IUserStore from "../interfaces/user-store";
 
-export class UserStore implements IUserStore {
+class UserStore implements IUserStore {
     @observable
     public user: IUser;
     private httpService: IHttpService;
@@ -12,26 +14,19 @@ export class UserStore implements IUserStore {
        this.httpService = httpservice;
     }
 
-    public async authenticateUser(authenticateUserReq: IAddUserReq): void {
-        const token = <IUser> await this.httpService.post(`users/authenticate`, authenticateUserReq);
+    public async authenticateUser(authenticateUserReq: IAddUserReq): Promise<void> {
+        const token = <IAuthenticateUserRes> await this.httpService.post(`users/authenticate`, authenticateUserReq);
         console.log(token);
     }
 
-    public  async addUser(addUserReq: IAddUserReq): void {
+    public  async addUser(addUserReq: IAddUserReq): Promise<void> {
         const res = await this.httpService.post('users/add', addUserReq);
     }
 
-    public async findEmail(findEmailReq: IFindEmailReq) {
-        const res = await this.httpService.post('users/find-email', findEmailReq);
+    public async findEmail(findEmailReq: IFindEmailReq): Promise<boolean> {
+        const res = <IFindEmailRes> await this.httpService.post('users/find-email', findEmailReq);
         return res.exists
     }
 }
 
-export interface IUserStore {
-    user: IUser
-
-    authenticateUser(authenticateUserReq: IAuthenticateUserReq): void
-    addUser(addUserReq: IAddUserReq): void
-    findEmail(findEmailReq: IFindEmailReq)
-}
-
+export default UserStore

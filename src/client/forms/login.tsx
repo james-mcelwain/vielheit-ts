@@ -2,7 +2,7 @@ import * as React from 'react';
 import {observer} from "mobx-react";
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton'
-import {IUserStore} from "../stores/user";
+import IUserStore from "../interfaces/user-store";
 
 interface ILoginFormState {
     email: string
@@ -18,16 +18,19 @@ class LoginFormState implements ILoginFormState {
 
 @observer(['userStore'])
 class LoginForm extends React.Component<{userStore?: IUserStore}, ILoginFormState> {
-    private state: ILoginFormState = new LoginFormState();
+    public state: ILoginFormState = new LoginFormState();
 
-    private async onSubmit(e) {
+    private async onSubmit(e: Event) {
         e.preventDefault();
         const {email, password} = this.state;
-        const res = await this.props.userStore.authenticateUser({email, password}).catch(/* TODO: Error handling */);
+        if (this.props.userStore) await this.props.userStore.authenticateUser({email, password})
     }
 
     private handleChange(e: any) {
-        this.setState({[e.target.name]: e.target.value})
+        const name: string = e.target.name;
+        const value = e.target.value;
+
+        Reflect.set(this.state, name, value)
     }
 
     public render() {

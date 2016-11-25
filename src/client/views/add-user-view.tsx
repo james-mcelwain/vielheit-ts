@@ -2,8 +2,8 @@ import * as React from 'react';
 import Loading from './loading';
 import AddUserForm from "../forms/add-user";
 
-class AddUserView extends React.Component<{}, {loaded: boolean}>{
-    private state = {
+class AddUserView extends React.Component<any, {loaded: boolean}>{
+    public state = {
         loaded: false
     };
 
@@ -12,7 +12,7 @@ class AddUserView extends React.Component<{}, {loaded: boolean}>{
         this.setState({ loaded: true });
     }
 
-    private render() {
+    public render() {
         return this.state.loaded? <AddUserForm/> : <Loading/>
     }
 }

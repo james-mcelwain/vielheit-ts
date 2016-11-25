@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {inject, observer} from "mobx-react";
+import {values} from "ramda";
+import {observer} from "mobx-react";
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton'
-import {IUserStore} from "../stores/user";
 import {observable} from "mobx";
+import IUserStore from "../interfaces/user-store";
 
 interface IAddUserFormState {
     username: string
@@ -25,19 +26,24 @@ class AddUserFormState implements IAddUserFormState {
 
 @observer(['userStore'])
 class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserFormState> {
-    private state: IAddUserFormState = new AddUserFormState();
+    public state: IAddUserFormState = new AddUserFormState();
 
-    private async onSubmit(e) {
+    private async onSubmit(e: Event) {
         e.preventDefault();
-        const res = await this.props.userStore.addUser(this.state).catch(/* TODO: Error handling */);
+        if (this.props.userStore) await this.props.userStore.addUser(this.state)
     }
 
     @observable
-    private emailError = null;
+    private emailError: string | null = null;
+    @observable
+    private valid = false;
 
     private handleChange(e: any) {
-        if (e.target.name === 'email' && /@/.test(e.target.value)) {
-            this.props.userStore.findEmail({ email: e.target.value }).then(x => {
+        const name: string = e.target.name;
+        const value = e.target.value;
+
+        if (name === 'email' && /@/.test(value)) {
+            if(this.props.userStore) this.props.userStore.findEmail({ email: value }).then((x: boolean) => {
                 if (x) {
                     this.emailError = 'Email already taken';
                 } else {
@@ -46,7 +52,11 @@ class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserForm
             })
         }
 
-        this.setState({[e.target.name]: e.target.value})
+        Reflect.set(this.state, name, value);
+
+        if (values(this.state).every(x => !!x) && !this.emailError && (this.state.password === this.state.confirm)) {
+            this.valid = true
+        }
     }
 
     public render() {
@@ -109,7 +119,9 @@ class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserForm
                 <br/>
                 <br/>
 
-                <RaisedButton type="submit">Register</RaisedButton>
+                <RaisedButton
+                    type="submit"
+                    disabled={this.valid}>Register</RaisedButton>
             </form>
         );
     }

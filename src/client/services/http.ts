@@ -12,7 +12,7 @@ export class HttpService implements IHttpService {
     private sessionService: ISessionService;
 
     private httpOpts = {
-        validateStatus: (status) => {
+        validateStatus: (status: number) => {
             return (status >= 200 && status < 300) || status === 400
         }
     };
@@ -21,7 +21,7 @@ export class HttpService implements IHttpService {
         this.sessionService = sessionService;
     }
 
-    private async doRequest(method, url, payload: IServiceReq = {}) {
+    private async doRequest(method: string, url: string, payload: IServiceReq = {}) {
         let httpOpts = this.httpOpts;
         if (this.sessionService.getSession()) {
             httpOpts = Object.assign({
@@ -31,10 +31,10 @@ export class HttpService implements IHttpService {
             }, httpOpts);
         }
 
-        const res = await http[method](`${API_BASE}${url}`, payload, this.httpOpts);
+        const res = <any> await Reflect.get(http, method).call(this, `${API_BASE}${url}`, payload, this.httpOpts);
         if (res.status === 400) {
             console.log(res)
-            JSON.parse(res.data.message).errors.forEach(x => this.httpErrors.push(x))
+            JSON.parse(res.data.message).errors.forEach((x: IHttpError) => this.httpErrors.push(x))
         }
         return res.data
     }
@@ -44,7 +44,7 @@ export class HttpService implements IHttpService {
     }
 
     public getErrorMessage(): string {
-        return this.httpErrors.map(x => `${x.property}: ${x.errorName}`)
+        return this.httpErrors.map(x => `${x.property}: ${x.errorName}`).join('')
     }
 
     public async get(url: string) {

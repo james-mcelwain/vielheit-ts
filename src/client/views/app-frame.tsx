@@ -2,7 +2,7 @@ import * as React from 'react';
 const ReactToastr: any = require('react-toastr')
 import {inject} from 'mobx-react';
 import {autorun} from "mobx";
-import {IHttpService} from "../services/http";
+import IHttpService from "../interfaces/http-service";
 import AppBar from 'material-ui/AppBar'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -10,12 +10,17 @@ const {ToastContainer} = ReactToastr;
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation);
 
 @inject(({httpService}) => ({httpService}))
-export default class AppFrame extends React.Component<{httpService?: IHttpService}, any> {
-    private errorListener = null;
+export default class AppFrame extends React.Component<{httpService: IHttpService}, any> {
+    private errorListener: () => void;
 
     private componentWillUnmount() {
-        this.errorListener = null;
+        Reflect.deleteProperty(this, 'errorListener');
     }
+
+    public refs: {
+        [string: string]: any;
+        container: any;
+    };
 
     private componentDidMount() {
         setTimeout(() => {
@@ -28,7 +33,7 @@ export default class AppFrame extends React.Component<{httpService?: IHttpServic
         })
     }
 
-    private render() {
+    public render() {
         return <div>
             <MuiThemeProvider>
                 <div>
