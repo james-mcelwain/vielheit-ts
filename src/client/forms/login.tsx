@@ -3,6 +3,7 @@ import {observer} from "mobx-react";
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton'
 import IUserStore from "../interfaces/user-store";
+import {observable} from "mobx";
 
 interface ILoginFormState {
     email: string
@@ -18,6 +19,7 @@ class LoginFormState implements ILoginFormState {
 
 @observer(['userStore'])
 class LoginForm extends React.Component<{userStore?: IUserStore}, ILoginFormState> {
+    @observable
     public state: ILoginFormState = new LoginFormState();
 
     private async onSubmit(e: Event) {
@@ -30,7 +32,7 @@ class LoginForm extends React.Component<{userStore?: IUserStore}, ILoginFormStat
         const name: string = e.target.name;
         const value = e.target.value;
 
-        Reflect.set(this.state, name, value)
+        this.setState({ [name]: value } as ILoginFormState)
     }
 
     public render() {

@@ -1,4 +1,4 @@
-import {Server, CORS, bodyParser, Response, Request, Next, RequestHandler} from "restify";
+import {Server, bodyParser, Response, Request, Next, RequestHandler} from "restify";
 import {InversifyRestifyServer} from "inversify-restify-utils";
 import kernel from "../config/index";
 import {inject, injectable} from "inversify";
@@ -42,18 +42,23 @@ class HTTPServer implements IHttpServer {
     public set name(name) { this.server.name = name }
 
     private toBootstrap: Array<() => void> = [];
-    public onBootstrap(fn: (cb: (err: Error, res: any) => void) => void): Promise<any> {
+    public onBootstrap(fn: (server: IHttpServer, cb: (err: Error, res: any) => void) => void): Promise<any> {
         return new Promise((resolve, reject) => {
             this.toBootstrap.push(() => {
-                return fn((err, result) => err ? reject(err) : resolve(result))
+                return fn(this, (err, result) => err ? reject(err) : resolve(result))
             })
         })
     }
 
 
-    private middleware: Array<RequestHandler> = [];
-    public registerMiddleware(handler: RequestHandler) {
-        this.middleware.push(handler)
+    private middleware: Array<[RequestHandler, number]> = [];
+    public registerMiddleware(handler: RequestHandler, sort = Infinity) {
+        this.middleware.push([handler, sort]);
+        this.middleware.sort((a, b) => {
+            if (a[1] < b[1]) return -1;
+            if (a[1] > b[1]) return 1;
+            return 0
+        })
     }
 
     public async listen(): Promise<void> {
@@ -72,10 +77,10 @@ class HTTPServer implements IHttpServer {
                     this.logger.info(`${Reflect.get(this.logger, 'format')(req)} method=${req.method} url=${req.url}`);
                     next()                    
                 });
-                
+
                 app.use(bodyParser());
                 for (let handler of middleware) {
-                    app.pre(handler)
+                    app.pre(handler[0])
                 }
             })
             .build();

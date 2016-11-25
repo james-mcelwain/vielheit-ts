@@ -1,5 +1,6 @@
 import {injectable, inject} from "inversify";
 import {createClient, RedisClient} from "redis";
+import {promisify} from "bluebird";
 import __ from "../config/constants";
 import ILoggerFactory from "../interfaces/logger-factory";
 import ILogger from "../interfaces/logger";

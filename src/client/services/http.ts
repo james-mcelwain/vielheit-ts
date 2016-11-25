@@ -24,6 +24,7 @@ export class HttpService implements IHttpService {
     private async doRequest(method: string, url: string, payload: IServiceReq = {}) {
         let httpOpts = this.httpOpts;
         if (this.sessionService.getSession()) {
+            console.log(this.sessionService.getSession())
             httpOpts = Object.assign({
                 headers: {
                     'Authorization': `Bearer ${this.sessionService.getSession()}`
@@ -31,9 +32,8 @@ export class HttpService implements IHttpService {
             }, httpOpts);
         }
 
-        const res = <any> await Reflect.get(http, method).call(this, `${API_BASE}${url}`, payload, this.httpOpts);
+        const res = <any> await Reflect.get(http, method).call(this, `${API_BASE}${url}`, payload, httpOpts);
         if (res.status === 400) {
-            console.log(res)
             JSON.parse(res.data.message).errors.forEach((x: IHttpError) => this.httpErrors.push(x))
         }
         return res.data

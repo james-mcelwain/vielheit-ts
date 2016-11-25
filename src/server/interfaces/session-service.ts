@@ -1,9 +1,10 @@
-import IUser from "./user";
+import IUser from "../../domain/user";
 
 interface ISessionService {
-    setSession(): any
-    getSession(): string
+    setSession(token: string): Promise<string>
+    getSession(user: IUser): Promise<string>
     clearSession(): any
+    onBootstrap(): any
 }
 
 export default ISessionService

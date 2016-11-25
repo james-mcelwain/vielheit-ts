@@ -26,6 +26,7 @@ class AddUserFormState implements IAddUserFormState {
 
 @observer(['userStore'])
 class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserFormState> {
+    @observable
     public state: IAddUserFormState = new AddUserFormState();
 
     private async onSubmit(e: Event) {
@@ -52,8 +53,7 @@ class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserForm
             })
         }
 
-        Reflect.set(this.state, name, value);
-
+        this.setState({ [name]: value } as IAddUserFormState);
         if (values(this.state).every(x => !!x) && !this.emailError && (this.state.password === this.state.confirm)) {
             this.valid = true
         }

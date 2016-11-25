@@ -16,7 +16,9 @@ class UserStore implements IUserStore {
 
     public async authenticateUser(authenticateUserReq: IAddUserReq): Promise<void> {
         const token = <IAuthenticateUserRes> await this.httpService.post(`users/authenticate`, authenticateUserReq);
-        console.log(token);
+        if (typeof token === 'string') {
+            this.httpService.getSessionService().setSession(token)
+        }
     }
 
     public  async addUser(addUserReq: IAddUserReq): Promise<void> {

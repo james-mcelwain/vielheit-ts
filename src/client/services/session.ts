@@ -2,12 +2,12 @@ import IHttpService from "../interfaces/http-service";
 import ISessionService from "../interfaces/session-service";
 
 class SessionService implements ISessionService{
-    public setSession(): void {
-
+    public setSession(token: string): void {
+        localStorage.setItem('session', token)
     }
 
     public getSession(): string {
-        return ''
+        return localStorage.getItem('session')
     }
 
     public clearSession(): boolean {

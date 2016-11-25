@@ -1,8 +1,6 @@
-import IHttpService from "./http-service";
-
 interface ISessionService {
     getSession(): string
-    setSession(): void
+    setSession(token: string): void
     clearSession(): boolean
 }
 
