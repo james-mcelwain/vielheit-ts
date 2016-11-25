@@ -6,7 +6,6 @@ import {join} from "path";
 import {readFile} from "fs";
 import {promisify} from "bluebird";
 import IController from "../interfaces/controller";
-import __ from "../config/constants";
 import ILogger from "../interfaces/logger";
 import ILoggerFactory from "../interfaces/logger-factory";
 import IRes from "../interfaces/res";
@@ -21,6 +20,18 @@ class PublicController implements IController {
 
     constructor(@inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
         this.logger = LoggerFactory.getLogger(this)
+    }
+
+    @Get('/js/client.js.map')
+    private async sourcemaps(req: IReq, res: IRes, next: Next) {
+        try {
+            const sourcemaps = await readFileA(join('.', 'dist/client.js.map'));
+            res.writeHead(200);
+            res.end(sourcemaps);
+            next();
+        } catch(e) {
+            next(new InternalServerError(e))
+        }
     }
 
     @Get('/css/styles.css')

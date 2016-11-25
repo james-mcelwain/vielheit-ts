@@ -14,8 +14,7 @@ export class UserStore implements IUserStore {
 
     public async authenticateUser(authenticateUserReq: IAddUserReq): void {
         const token = <IUser> await this.httpService.post(`users/authenticate`, authenticateUserReq);
-        console.log(token)
-        this.httpService.getSessionService().setSession(token);
+        console.log(token);
     }
 
     public  async addUser(addUserReq: IAddUserReq): void {

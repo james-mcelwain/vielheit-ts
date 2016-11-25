@@ -1,5 +1,5 @@
 import IHttpService from "../interfaces/http-service";
-import ISessionService from "../../server/interfaces/session-service";
+import ISessionService from "../interfaces/session-service";
 
 class SessionService extends ISessionService{
     private httpService: IHttpService;
