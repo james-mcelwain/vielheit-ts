@@ -41,6 +41,7 @@ class PublicController implements IController {
             const styles = await readFileA(join('.', 'src/server/public/styles.css'));
             res.writeHead(200, { 'Cache-Control': 'no-cache', 'Content-Type': 'text/css' });
             res.end(styles);
+            next()
         } catch (e) {
             next(new InternalServerError(e))
         }

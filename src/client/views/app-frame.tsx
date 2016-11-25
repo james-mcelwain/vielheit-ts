@@ -1,10 +1,12 @@
 import * as React from 'react';
-const ReactToastr: any = require('react-toastr')
+const ReactToastr = require('react-toastr');
 import {inject} from 'mobx-react';
 import {autorun} from "mobx";
 import IHttpService from "../interfaces/http-service";
 import AppBar from 'material-ui/AppBar'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import injectTapEventPlugin = require('react-tap-event-plugin');
+injectTapEventPlugin();
 
 const {ToastContainer} = ReactToastr;
 const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation);

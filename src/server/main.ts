@@ -23,6 +23,7 @@ const title =
 ________________________________________                                                       
 `;
 
+Reflect.set(global, 'navigator', { userAgent: 'all' });
 
 console.log(title);
 const app = kernel.get<IApp>(__.App);

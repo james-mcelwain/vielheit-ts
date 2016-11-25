@@ -9,6 +9,7 @@ const base = (target) => ({
     devtool: "source-map",
     libraryTarget: "commonjs",
     resolve: {
+        alias: alias,
         extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
     },
     module: {
@@ -53,6 +54,14 @@ const client = Object.assign(base('client'), {
             'global': {},
         })
     ]
+});
+
+// TODO: Check if this can be removed
+var reactDomLibPath = path.join(__dirname, "./node_modules/react-dom/lib");
+var alias = {};
+["EventPluginHub", "EventConstants", "EventPluginUtils", "EventPropagators",
+    "SyntheticUIEvent", "CSSPropertyOperations", "ViewportMetrics"].forEach(function(filename){
+    alias["react/lib/"+filename] = path.join(__dirname, "./node_modules/react-dom/lib", filename);
 });
 
 module.exports = [server, client];
