@@ -5,6 +5,7 @@ import routes from './routes';
 import {Provider} from "mobx-react";
 import {UserStore} from "./stores/user";
 import {HttpService} from "./services/http";
+import SessionService from "./services/session";
 
 /*
  We create httpService as a singleton that was can use it as an
@@ -13,7 +14,8 @@ import {HttpService} from "./services/http";
  Same thing with the userStore, it will store information about
  the auth state of the current user.
  */
-const httpService = new HttpService();
+const sessionService = new SessionService();
+const httpService = new HttpService(sessionService);
 const userStore = new UserStore(httpService);
 
 const app =

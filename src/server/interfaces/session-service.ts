@@ -1,8 +1,8 @@
 import IUser from "./user";
 
 interface ISessionService {
-    setSession(user: IUser): Promise<string>
-    getSession(token: string): any
+    setSession(): any
+    getSession(): string
     clearSession(): any
 }
 

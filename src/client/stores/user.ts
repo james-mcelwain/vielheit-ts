@@ -1,7 +1,7 @@
 import {observable} from "mobx";
-import IUser from "../../server/interfaces/user"; // TODO move to domain
+import IUser from "../../server/interfaces/user"; // TODO move to tomain
 import {IAuthenticateUserReq, IAddUserReq} from "../../domain/request/user";
-import {IHttpService} from "../services/http";
+import IHttpService from "../interfaces/http-service";
 
 export class UserStore implements IUserStore {
     @observable
@@ -13,7 +13,9 @@ export class UserStore implements IUserStore {
     }
 
     public async authenticateUser(authenticateUserReq: IAddUserReq): void {
-        this.user = <IUser> await this.httpService.post(`users/authenticate`, authenticateUserReq)
+        const token = <IUser> await this.httpService.post(`users/authenticate`, authenticateUserReq);
+        console.log(token)
+        this.httpService.getSessionService().setSession(token);
     }
 
     public  async addUser(addUserReq: IAddUserReq): void {

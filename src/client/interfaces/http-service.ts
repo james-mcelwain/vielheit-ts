@@ -11,6 +11,7 @@ interface IHttpService {
     get(url: string)
     post(url: string, payload: IServiceReq)
     put(url: string, payload: IServiceReq)
+    getSessionService(): ISessionService
 }
 
 export default IHttpService
