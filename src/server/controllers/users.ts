@@ -32,6 +32,13 @@ class UsersController implements IController {
         return await this.userService.getAll();
     }
 
+    @Protected
+    @Get('/session')
+    private async getSession(req: IReq, res: IRes, next: Next) {
+        this.logger.trace(`retrieving session information for ${req.header('Authorization').slice(7)}`);
+        return 'Ok'
+    }
+
     @Post('/find-email')
     private async findEmail(req: IReq, res: IRes, next: Next): Promise<IFindEmailRes> {
         const findEmailReq = <IFindEmailReq> req.body;

@@ -10,6 +10,7 @@ export default function Protected(target: any, propertyKey: string, descriptor: 
         const next = args[args.length - 1];
 
         if (!req.user || !req.user.isAuthenticated()) {
+            res.header('CLEAR-SESSION', true);
             return res.redirect('/login', next);
         }
 

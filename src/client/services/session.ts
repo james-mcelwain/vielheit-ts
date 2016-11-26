@@ -13,6 +13,10 @@ class SessionService implements ISessionService{
     public clearSession(): boolean {
         return true
     }
+
+    public hasSession(): boolean {
+        return this.getSession() !== null;
+    }
 }
 
 export default SessionService

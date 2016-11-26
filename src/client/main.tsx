@@ -14,12 +14,13 @@ import SessionService from "./services/session";
  Same thing with the userStore, it will store information about
  the auth state of the current user.
  */
+
 const sessionService = new SessionService();
 const httpService = new HttpService(sessionService);
 const userStore = new UserStore(httpService);
 
 const app =
-    <Provider userStore={userStore} httpService={httpService}>
+    <Provider userStore={userStore} httpService={httpService} sessionService={sessionService}>
         <Router history={browserHistory}>{routes}</Router>
     </Provider>;
 

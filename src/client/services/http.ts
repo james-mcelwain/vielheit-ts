@@ -1,10 +1,12 @@
-import * as http from 'axios';
+import * as axios from 'axios';
 import {observable} from "mobx";
 import IServiceReq from "../../domain/request/service-request";
 import {API_BASE} from "../../server/config/constants";
 import IHttpError from "../interfaces/http-error";
 import IHttpService from "../interfaces/http-service";
 import ISessionService from "../interfaces/session-service";
+
+const http = axios.create({});
 
 export class HttpService implements IHttpService {
     @observable
@@ -19,6 +21,13 @@ export class HttpService implements IHttpService {
 
     public constructor(sessionService: ISessionService) {
         this.sessionService = sessionService;
+
+        http.interceptors.response.use((res) => {
+            if (res.headers['CLEAR-SESSION']) {
+                this.sessionService.clearSession()
+            }
+            return res
+        });
     }
 
     private async doRequest(method: string, url: string, payload: IServiceReq = {}) {
