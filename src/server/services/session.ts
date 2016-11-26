@@ -38,14 +38,15 @@ class SessionService implements ISessionService{
     public async onBootstrap(server: IHTTPServer) {
         server.registerMiddleware(async (req: IReq, res: IRes, next: Next) => {
             if (req.header('Authorization')) {
-                const token = await this.getSession(req.header('Authorization').slice(7));
+                const sessionId = req.header('Authorization').slice(7);
+                const token = await this.getSession(sessionId);
                 const session = await this.cache.get(Reflect.get(token, 'session-id'));
-                this.logger.fatal(session);
                 if (session) {
                     const user = <IUser> JSON.parse(session);
                     req.user = new User(user);
+                    req.user.setAuth(true);
+                    req.user.sessionId = sessionId;
                 } else {
-                    this.logger.fatal('clear session');
                     res.header('clear-session', 'true');
                 }
             }
@@ -68,8 +69,8 @@ class SessionService implements ISessionService{
         return token
     }
 
-    public async clearSession() {
-
+    public async clearSession(sessionId: string): Promise<boolean> {
+        return await this.cache.del(sessionId)
     }
 }
 

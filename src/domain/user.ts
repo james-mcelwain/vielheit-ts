@@ -3,6 +3,7 @@ interface IUser {
     fname: string
     lname: string
     email: string
+    sessionId?: string
     isAuthenticated(): boolean
     setAuth(auth: boolean): void
     serialize(): ISerializableUser

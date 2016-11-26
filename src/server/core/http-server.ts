@@ -21,8 +21,13 @@ class HTTPServer implements IHttpServer {
     private server: Server | any;
     private port: number;
     private router: InversifyRestifyServer;
-    @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory;
-    @inject(__.SessionService) session: ISessionService;
+
+    @inject(__.LoggerFactory)
+    private LoggerFactory: ILoggerFactory;
+
+    @inject(__.SessionService)
+    session: ISessionService;
+
     public logger: ILogger;
 
     public constructor(
@@ -104,9 +109,10 @@ class HTTPServer implements IHttpServer {
         this.server.on('InternalServer', (req: IReq, res: IRes, err: any, cb: Function) => {
             this.logger.error(err);
 
-            // TODO
+            // TODO: remove from prod
             const page = `
             <h1>sorry, this is broken right now... try again later?</h1>
+
 
             ${true ? `<div style="background: #feeeee">
                 <pre>${err.stack}</pre>
@@ -127,7 +133,7 @@ class HTTPServer implements IHttpServer {
             cb()
         });
 
-        /*this.server.on('NotFound', (req: any, res: any, err: any, cb: Function) => {
+        this.server.on('NotFound', (req: any, res: any, err: any, cb: Function) => {
             const page = `
             <h1>404</h1>
             `;
@@ -136,7 +142,7 @@ class HTTPServer implements IHttpServer {
             res.end(page);
             cb();
         });
-*/
+
         this.server.listen(this.port, () => this.logger.info(`${this.name} listening on ${this.port}`))
     }
 

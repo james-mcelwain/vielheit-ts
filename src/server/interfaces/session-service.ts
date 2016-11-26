@@ -4,7 +4,7 @@ import IHTTPServer from "./http-server";
 interface ISessionService {
     setSession(user: IUser): Promise<string>
     getSession(token: string): Promise<string>
-    clearSession(): any
+    clearSession(sessionId: string): Promise<boolean>
     onBootstrap(server: IHTTPServer): any
 }
 

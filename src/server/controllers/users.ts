@@ -13,12 +13,17 @@ import IReq from "../interfaces/req";
 import {IAddUserReq, IAuthenticateUserReq, IFindEmailReq} from "../../domain/request/user";
 import {IAuthenticateUserRes, IAddUserRes, IFindEmailRes} from "../../domain/response/user";
 import Protected from "../middleware/protected";
+import ISessionService from "../interfaces/session-service";
 
 @injectable()
 @Controller(`${API_BASE}/users`)
 class UsersController implements IController {
     @inject(__.UserService)
     private userService: IUserService;
+
+    @inject(__.SessionService)
+    private sessionService: ISessionService;
+
     private logger: ILogger;
 
 
@@ -30,6 +35,14 @@ class UsersController implements IController {
     @Get('/')
     private async get(req: IReq, res: IRes, next: Next) {
         return await this.userService.getAll();
+    }
+
+    @Protected
+    @Get('/logout')
+    private async logout(req: IReq, res: IRes, next: Next) {
+        this.sessionService.clearSession(req.user.sessionId);
+        res.header('clear-session', 'true');
+        return res.redirect('/', next)
     }
 
     @Post('/session')
