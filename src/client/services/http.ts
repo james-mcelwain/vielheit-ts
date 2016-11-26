@@ -23,7 +23,8 @@ export class HttpService implements IHttpService {
         this.sessionService = sessionService;
 
         http.interceptors.response.use((res) => {
-            if (res.headers['CLEAR-SESSION']) {
+            console.log(res)
+            if (res.headers['clear-session']) {
                 this.sessionService.clearSession()
             }
             return res

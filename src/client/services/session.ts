@@ -10,8 +10,8 @@ class SessionService implements ISessionService{
         return localStorage.getItem('session')
     }
 
-    public clearSession(): boolean {
-        return true
+    public clearSession(): void {
+        localStorage.clear();
     }
 
     public hasSession(): boolean {

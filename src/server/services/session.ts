@@ -40,9 +40,13 @@ class SessionService implements ISessionService{
             if (req.header('Authorization')) {
                 const token = await this.getSession(req.header('Authorization').slice(7));
                 const session = await this.cache.get(Reflect.get(token, 'session-id'));
+                this.logger.fatal(session);
                 if (session) {
                     const user = <IUser> JSON.parse(session);
                     req.user = new User(user);
+                } else {
+                    this.logger.fatal('clear session');
+                    res.header('clear-session', 'true');
                 }
             }
             next()

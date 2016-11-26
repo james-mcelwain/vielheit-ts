@@ -1,4 +1,5 @@
 import IUser from "../user";
+import {ISerializableUser} from "../user";
 
 class User implements IUser {
     public username: string;
@@ -21,6 +22,15 @@ class User implements IUser {
 
     public isAuthenticated(): boolean {
         return this.auth
+    }
+
+    public serialize(): ISerializableUser {
+        return {
+            username: this.username,
+            fname: this.fname,
+            lname: this.lname,
+            email: this.email,
+        }
     }
 
     public setAuth(auth: boolean): void {

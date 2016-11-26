@@ -32,11 +32,11 @@ class UsersController implements IController {
         return await this.userService.getAll();
     }
 
-    @Protected
-    @Get('/session')
+    @Post('/session')
     private async getSession(req: IReq, res: IRes, next: Next) {
-        this.logger.trace(`retrieving session information for ${req.header('Authorization').slice(7)}`);
-        return 'Ok'
+        if(req.user) return req.user.serialize();
+        res.send(200);
+        return next()
     }
 
     @Post('/find-email')

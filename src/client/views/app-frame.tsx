@@ -8,13 +8,14 @@ import IconButton from "material-ui/IconButton";
 import IconMenu from "material-ui/IconMenu";
 import MenuItem from "material-ui/MenuItem";
 import FlatButton from "material-ui/FlatButton";
-import { Link } from 'react-router';
+import {Link} from 'react-router';
 import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
 const ReactToastr = require('react-toastr');
 
 import injectTapEventPlugin = require('react-tap-event-plugin');
 import IUserStore from "../interfaces/user-store";
 import ISessionService from "../interfaces/session-service";
+import User from "../../domain/impl/user";
 injectTapEventPlugin();
 
 const {ToastContainer} = ReactToastr;
@@ -26,7 +27,7 @@ class Login extends React.Component<any, any> {
 
     render() {
         return (
-            <Link to="/login"><FlatButton {...this.props} label="Login" /></Link>
+            <Link to="/login"><FlatButton {...this.props} label="Login"/></Link>
         );
     }
 }
@@ -40,9 +41,9 @@ const Logged = (props) => (
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
     >
-        <MenuItem primaryText="Refresh" />
-        <MenuItem primaryText="Help" />
-        <MenuItem primaryText="Sign out" />
+        <MenuItem primaryText="Refresh"/>
+        <MenuItem primaryText="Help"/>
+        <MenuItem primaryText="Sign out"/>
     </IconMenu>
 );
 
@@ -54,7 +55,7 @@ interface IAppFrameState {
 
 Reflect.set(Logged, 'muiName', 'IconMenu');
 
-@inject(({httpService, sessionService}) => ({httpService, sessionService}))
+@inject(({httpService, sessionService, userStore}) => ({httpService, sessionService, userStore}))
 export default class AppFrame extends React.Component<IAppFrameState, any> {
     @observable
     public state = {
@@ -73,11 +74,7 @@ export default class AppFrame extends React.Component<IAppFrameState, any> {
         container: any;
     };
 
-    private componentDidMount() {
-        console.log(this.props)
-        this.setState({authenticated: this.props.sessionService.hasSession()});
-
-        this.setState({ loaded: true });
+    public componentDidMount() {
         setTimeout(() => {
             this.errorListener = autorun(() => {
                 if (this.props.httpService.httpErrors.length) {
@@ -85,7 +82,19 @@ export default class AppFrame extends React.Component<IAppFrameState, any> {
                     this.props.httpService.clearErrors()
                 }
             })
-        })
+        });
+
+        if (this.props.sessionService.hasSession()) return this.props.httpService.post('users/session', {}).then((user) => {
+            if (user) {
+                this.props.userStore.user = new User(user);
+            }
+
+            this.setState({authenticated: this.props.sessionService.hasSession()});
+            this.setState({loaded: true});
+        });
+
+        this.setState({authenticated: this.props.sessionService.hasSession()});
+        this.setState({loaded: true});
     }
 
     public handleChange(event, authenticated) {
@@ -93,7 +102,8 @@ export default class AppFrame extends React.Component<IAppFrameState, any> {
     }
 
     public render() {
-        return (!this.state.loaded ? <div style={{ position: 'absolute', width: '100%', height: '100%' }} className="loader"/> : <div>
+        return (!this.state.loaded ?
+            <div style={{ position: 'absolute', width: '100%', height: '100%' }} className="loader"/> : <div>
             <MuiThemeProvider>
                 <div>
                     <ToastContainer
