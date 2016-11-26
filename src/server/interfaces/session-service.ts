@@ -1,10 +1,11 @@
 import IUser from "../../domain/user";
+import IHTTPServer from "./http-server";
 
 interface ISessionService {
-    setSession(token: string): Promise<string>
-    getSession(user: IUser): Promise<string>
+    setSession(user: IUser): Promise<string>
+    getSession(token: string): Promise<string>
     clearSession(): any
-    onBootstrap(): any
+    onBootstrap(server: IHTTPServer): any
 }
 
 export default ISessionService

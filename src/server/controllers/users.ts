@@ -2,10 +2,8 @@ import {Next} from "restify";
 import {BadRequestError} from "restify-errors";
 import {Post, Get, Controller} from "inversify-restify-utils";
 import {injectable, inject} from "inversify";
-import {IDatabase} from "pg-promise";
 import __, {API_BASE} from "../config/constants";
 import Validate from "../validate";
-import {IExtensions} from "../db/index";
 import IController from "../interfaces/controller";
 import IUserService from "../interfaces/user-service";
 import ILogger from "../interfaces/logger";
@@ -14,6 +12,7 @@ import IRes from "../interfaces/res";
 import IReq from "../interfaces/req";
 import {IAddUserReq, IAuthenticateUserReq, IFindEmailReq} from "../../domain/request/user";
 import {IAuthenticateUserRes, IAddUserRes, IFindEmailRes} from "../../domain/response/user";
+import Protected from "../middleware/protected";
 
 @injectable()
 @Controller(`${API_BASE}/users`)
@@ -27,6 +26,7 @@ class UsersController implements IController {
         this.logger = LoggerFactory.getLogger(this)
     }
 
+    @Protected
     @Get('/')
     private async get(req: IReq, res: IRes, next: Next) {
         return await this.userService.getAll();

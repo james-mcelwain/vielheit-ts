@@ -13,6 +13,8 @@ import IUser from "../../domain/user";
 import IReq from "../interfaces/req";
 import IRes from "../interfaces/res";
 import {Next} from "restify";
+import User from "../../domain/impl/user";
+import IHTTPServer from "../interfaces/http-server";
 
 const verifyA = promisify(verify);
 
@@ -33,15 +35,15 @@ class SessionService implements ISessionService{
         this.logger = LoggerFactory.getLogger(this)
     }
 
-    public async onBootstrap(server) {
+    public async onBootstrap(server: IHTTPServer) {
         server.registerMiddleware(async (req: IReq, res: IRes, next: Next) => {
             if (req.header('Authorization')) {
                 const token = await this.getSession(req.header('Authorization').slice(7));
                 const session = await this.cache.get(Reflect.get(token, 'session-id'));
                 if (session) {
-                    req.user = JSON.parse(session)
+                    const user = <IUser> JSON.parse(session);
+                    req.user = new User(user);
                 }
-
             }
             next()
         }, 0)

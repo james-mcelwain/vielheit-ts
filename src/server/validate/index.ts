@@ -16,7 +16,7 @@ export default function Valdiate(target: any, propertyKey: string, descriptor: T
     const method = descriptor.value || function() {};
 
     // We overwrite the route with our validation logic
-    descriptor.value = function (...args: Array<any>) {
+    descriptor.value = function (...args: any[]) {
         // store references to req and next because we need to access them to serve a validation error
         const req = args[0];
         const next = args[args.length - 1];
