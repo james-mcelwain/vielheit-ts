@@ -19,8 +19,3 @@
          using Inversify to make things just a          
          bit over-engineered.
                                                       
-         Featuring:                                     
-         -- Decorators for Restify route paths         
-         -- "IoC" using Inversify                        
-         -- JWT auth flow                        
-         -- Postgres persistence                       
