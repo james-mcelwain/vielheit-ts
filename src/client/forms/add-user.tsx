@@ -43,7 +43,7 @@ class AddUserForm extends React.Component<{userStore?: IUserStore}, IAddUserForm
         const name: string = e.target.name;
         const value = e.target.value;
 
-        if (name === 'email' && /@/.test(value)) {
+        if (name === 'email' && /@/.test(value)) { // todo: focus
             if(this.props.userStore) this.props.userStore.findEmail({ email: value }).then((x: boolean) => {
                 if (x) {
                     this.emailError = 'Email already taken';
