@@ -5,7 +5,6 @@ import ILogger from "../interfaces/logger";
 import {Request, Response, Next, InternalServerError} from "restify";
 import IHTTPServer from "../interfaces/http-server";
 import {match, RouterContext} from "react-router";
-import routes from "../../client/routes"
 import {API_BASE} from "../config/constants";
 import {readFile} from "fs";
 import {promisify} from "bluebird";
@@ -24,11 +23,11 @@ class IsomorphicReactService {
     }
 
     public async onBootstrap(server: IHTTPServer) {
-        server.registerMiddleware((req: Request, res: Response, next: Next) => {
+        if (process.env.NODE_ENV === 'prod') server.registerMiddleware((req: Request, res: Response, next: Next) => {
             if (req.url.includes(API_BASE)) return next();
             if (req.url.includes('public')) return next();
 
-            match({routes, location: req.url}, async(err: Error, redirect, renderProps) => {
+            match({require(path.resolve(process.cwd(), 'dist/app/routes')), location: req.url}, async(err: Error, redirect, renderProps) => {
                 if (err) return next(new InternalServerError(err.message));
 
                 const reactMarkup = renderToStaticMarkup(<RouterContext {...renderProps}/>);

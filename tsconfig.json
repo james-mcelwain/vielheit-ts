@@ -1,18 +1,17 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
         "sourceMap": true,
         "noImplicitAny": true,
         "module": "commonjs",
-        "target": "ES5",
-        "lib": ["es6", "dom"],
+        "target": "es6",
         "experimentalDecorators": true,
         "jsx": "react",
+        "emitDecoratorMetadata": true,
+        "lib": ["es6", "dom"],
+        "types": ["reflect-metadata", "node"],
         "strictNullChecks": true
     },
     "exclude": [
-        "node_modules",
-        "typings",
-        "src/server"
+        "node_modules"
     ]
 }

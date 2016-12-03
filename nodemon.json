@@ -1,0 +1,6 @@
+{
+    "verbose": true,
+    "ignore": [],
+    "watch": ["src/server/"],
+    "ext": "ts"
+}
