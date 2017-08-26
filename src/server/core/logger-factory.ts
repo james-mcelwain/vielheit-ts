@@ -2,7 +2,6 @@ import {createLogger, LoggerOptions, stdSerializers as serializers} from "bunyan
 import {injectable}from "inversify";
 import ILogger from "../interfaces/logger";
 
-
 @injectable()
 class LoggerFactory {
     private static makeDefaultConfig(): LoggerOptions {
@@ -19,9 +18,6 @@ class LoggerFactory {
     private static createLogger(name: string): ILogger {
         if (!LoggerFactory.loggers[name]) {
             const logger: ILogger = createLogger(LoggerFactory.makeConfig(name, LoggerFactory.config));
-            Reflect.set(logger, 'format', (req: any) => {
-              return `req=${req.uuid}${req.session ? ` session=${req.session}` : ''}`
-            });
             LoggerFactory.loggers[name] = logger;
         }
 
@@ -37,7 +33,7 @@ class LoggerFactory {
             return LoggerFactory.createLogger(loggerName[1]);
         }
 
-        return LoggerFactory.createLogger('Global');
+        return LoggerFactory.createLogger('global');
 
     }
 }

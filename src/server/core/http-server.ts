@@ -4,7 +4,6 @@ import kernel from "../config/index";
 import {inject, injectable} from "inversify";
 import __ from "../config/constants";
 import IHttpServer from "../interfaces/http-server";
-import {v4 as uuid} from "node-uuid";
 import ISessionService from "../interfaces/session-service";
 import ILoggerFactory from "../interfaces/logger-factory";
 import ILogger from "../interfaces/logger";
@@ -76,14 +75,14 @@ class HTTPServer implements IHttpServer {
         const middleware = this.middleware;
         this.server = <Server> this.router
             .setConfig((app: Server) => {
-                app.pre((req: Request, res: Response, next: Next) => {
-                    Reflect.set(req, 'start', Date.now());
-                    Reflect.set(req, 'uuid', uuid());
-                    this.logger.info(`${Reflect.get(this.logger, 'format')(req)} method=${req.method} url=${req.url}`);
-                    next()                    
+                app.pre((req: IReq, res: Response, next: Next) => {
+                    req.start = Date.now();
+                    req.log.info({ start: req.start, url: req.url, method: req.method })
+                    next()
                 });
 
                 app.use(plugins.bodyParser());
+                app.use(plugins.requestLogger())
                 for (let handler of middleware) {
                     app.pre(handler[0])
                 }
@@ -93,7 +92,7 @@ class HTTPServer implements IHttpServer {
 
         this.server.on('after', (req: IReq, res: IRes, route: string, err: Error) => {
             err && err.name !== 'BadRequestError' && this.logger.error(err);
-            this.logger.info(`${Reflect.get(this.logger, 'format')(req)} status=${res.statusCode} time=${Date.now() - (+req.start) }`)
+            req.log.info({ status: res.statusCode, time: Date.now() - (+req.start)})
         });
 
         this.server.on('uncaughtEception', (req: IReq, res: IRes, route: string, err: Error) => {
