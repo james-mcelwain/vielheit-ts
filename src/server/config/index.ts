@@ -19,8 +19,6 @@ import ISessionService from "../interfaces/session-service";
 import SessionService from "../services/session";
 import ICacheService from "../interfaces/cache-service";
 import CacheService from "../services/cache";
-import IsomorphicReactService from "../services/react";
-import IIsomorphicReactService from "../interfaces/isomorphic-react-service";
 import PublicController from "../controllers/public";
 
 const kernel = new Kernel();
@@ -78,11 +76,6 @@ kernel
 kernel
 .bind<ICacheService>(__.CacheService)
     .to(CacheService)
-    .inSingletonScope();
-
-// REACT
-kernel.bind<IIsomorphicReactService>(__.IsomorphicReactService)
-    .to(IsomorphicReactService)
     .inSingletonScope();
 
 // ROUTES

@@ -13,7 +13,6 @@ const __ = {
     UserService: Symbol('UserService'),
     SessionService: Symbol('SessionService'),
     CacheService: Symbol('CacheService'),
-    IsomorphicReactService: Symbol('IsomorphicReactService'),
 };
 
 export const API_BASE = '/api/';
