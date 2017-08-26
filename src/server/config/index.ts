@@ -20,6 +20,8 @@ import SessionService from "../services/session";
 import ICacheService from "../interfaces/cache-service";
 import CacheService from "../services/cache";
 import PublicController from "../controllers/public";
+import {IAppConfig} from '../interfaces/app-config';
+import * as uuid from 'node-uuid';
 
 const container = new Container();
 
@@ -30,6 +32,17 @@ const container = new Container();
 container
     .bind<IApp>(__.App)
     .to(App);
+
+// AppConfig -
+// Some configuration properties
+
+container
+    .bind<IAppConfig>(__.AppConfig)
+    .toConstantValue({
+        port: 8080,
+        name: 'vielheit',
+        version: uuid.v4(),
+    })
 
 // DatabaseProvider -
 // Deals with initialization logic for database

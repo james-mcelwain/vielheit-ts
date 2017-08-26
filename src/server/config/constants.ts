@@ -1,5 +1,6 @@
 const __ = {
     App: Symbol('App'),
+    AppConfig: Symbol('AppConfig'),
 
     DatabaseProvider: Symbol('DatabaseProvider'),
     Database: Symbol('Database'),

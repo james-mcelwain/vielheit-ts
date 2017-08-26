@@ -1,6 +1,6 @@
-import {Server, plugins, Response, Request, Next, RequestHandler} from "restify";
+import {Server, plugins, Response, Next, RequestHandler} from "restify";
 import {InversifyRestifyServer} from "inversify-restify-utils";
-import kernel from "../config/index";
+import container from "../config/index";
 import {inject, injectable} from "inversify";
 import __ from "../config/constants";
 import IHttpServer from "../interfaces/http-server";
@@ -9,20 +9,22 @@ import ILoggerFactory from "../interfaces/logger-factory";
 import ILogger from "../interfaces/logger";
 import IReq from "../interfaces/req";
 import IRes from "../interfaces/res";
+import {IAppConfig} from '../interfaces/app-config';
 
 declare type process = {
     env: any,
     exit: Function
 }
 
+interface InternalServer extends Server {
+    version: string
+}
+
 @injectable()
 class HTTPServer implements IHttpServer {
-    private server: Server | any;
+    private server: InternalServer;
     private port: number;
     private router: InversifyRestifyServer;
-
-    @inject(__.LoggerFactory)
-    private LoggerFactory: ILoggerFactory;
 
     @inject(__.SessionService)
     session: ISessionService;
@@ -30,12 +32,18 @@ class HTTPServer implements IHttpServer {
     public logger: ILogger;
 
     public constructor(
-        port: number = 8080,
-        name: string = '',
-        version: string = ''
+        @inject(__.AppConfig)
+        config: IAppConfig,
+        @inject(__.LoggerFactory)
+        LoggerFactory: ILoggerFactory,
     ) {
-        this.port = port;
-        this.router = <InversifyRestifyServer> new InversifyRestifyServer(<any> kernel)
+        this.port = config.port;
+
+        this.logger = LoggerFactory.getLogger(this);
+        this.router = <InversifyRestifyServer> new InversifyRestifyServer(container, {
+            log: this.logger,
+            name: config.name,
+        })
     }
 
 
@@ -66,25 +74,23 @@ class HTTPServer implements IHttpServer {
     }
 
     public async listen(): Promise<void> {
-        this.logger = this.LoggerFactory.getLogger(this);
-
         for (let fn of this.toBootstrap) {
             await fn()
         }
 
         const middleware = this.middleware;
-        this.server = <Server> this.router
+        this.server = <InternalServer> this.router
             .setConfig((app: Server) => {
                 app.pre((req: IReq, res: Response, next: Next) => {
                     req.start = Date.now();
-                    req.log.info({ start: req.start, url: req.url, method: req.method })
+                    req.log.info({ start: req.start, url: req.url, method: req.method }, 'server before')
                     next()
                 });
 
                 app.use(plugins.bodyParser());
                 app.use(plugins.requestLogger())
-                for (let handler of middleware) {
-                    app.pre(handler[0])
+                for (let [handler] of middleware) {
+                    app.pre(handler)
                 }
             })
             .build();
@@ -92,7 +98,7 @@ class HTTPServer implements IHttpServer {
 
         this.server.on('after', (req: IReq, res: IRes, route: string, err: Error) => {
             err && err.name !== 'BadRequestError' && this.logger.error(err);
-            req.log.info({ status: res.statusCode, time: Date.now() - (+req.start)})
+            req.log.info({ status: res.statusCode, end: Date.now() - (+req.start)}, 'server after')
         });
 
         this.server.on('uncaughtEception', (req: IReq, res: IRes, route: string, err: Error) => {
