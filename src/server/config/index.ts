@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import {Kernel} from "inversify";
+import {Container} from "inversify";
 import __ from "./constants";
 import DatabaseProvider from "../db";
 import {IDatabase} from "pg-promise";
@@ -21,59 +21,59 @@ import ICacheService from "../interfaces/cache-service";
 import CacheService from "../services/cache";
 import PublicController from "../controllers/public";
 
-const kernel = new Kernel();
+const container = new Container();
 
 // ENTITIES
 
 // App -
 // Our base class to run the application
-kernel
+container
     .bind<IApp>(__.App)
     .to(App);
 
 // DatabaseProvider -
 // Deals with initialization logic for database
-kernel
+container
     .bind<IDatabaseProvider>(__.DatabaseProvider)
     .to(DatabaseProvider)
     .inSingletonScope();
 
 // Database
 // In our case, an instnace of a postgres client
-kernel
+container
     .bind<IDatabase<IExtensions>>(__.Database)
-    .toConstantValue(kernel.get<IDatabaseProvider>(__.DatabaseProvider).getDatabase());
+    .toConstantValue(container.get<IDatabaseProvider>(__.DatabaseProvider).getDatabase());
 
 
 // HTTPServer -
 // A generic server exposing GET, POST, PUT, and DEL
-kernel
+container
     .bind<IHTTPServer>(__.HTTPServer)
     .to(HTTPServer)
     .inSingletonScope();
 
 // LoggerFactory -
 // Static class providing loggers
-kernel
+container
     .bind<LoggerFactory>(__.LoggerFactory)
     .toConstantValue(LoggerFactory);
 
 // SERVICES
 
 // UserService -
-kernel
+container
     .bind<IUserService>(__.UserService)
     .to(UserService)
     .inSingletonScope();
 
 // SessionService -
-kernel
+container
     .bind<ISessionService>(__.SessionService)
     .to(SessionService)
     .inSingletonScope();
     
 // CacheService -
-kernel
+container
 .bind<ICacheService>(__.CacheService)
     .to(CacheService)
     .inSingletonScope();
@@ -82,15 +82,15 @@ kernel
 
 // Public-
 // Serves core assets and application, index.html, etc.
-kernel
+container
     .bind<IController>(<any> TYPE.Controller)
     .to(PublicController)
     .whenTargetNamed('PublicController');
 
 // Users -
 // Core API for dealing with users / authentication
-kernel.bind<IController>(<any> TYPE.Controller)
+container.bind<IController>(<any> TYPE.Controller)
     .to(UsersController)
     .whenTargetNamed('UsersController');
 
-export default kernel
+export default container

@@ -50,7 +50,7 @@ class PublicController implements IController {
     @Get('/js/bundle.js')
     private async bundle(req: IReq, res: IRes, next: Next) {
         try {
-            const bundle = await readFileA(join('.', 'dist/client.js'), 'utf8');
+            const bundle = await readFileA(join('.', 'dist/client.js'));
             res.writeHead(200);
             res.end(bundle);
             next()

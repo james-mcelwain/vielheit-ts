@@ -1,4 +1,4 @@
-import {Server, bodyParser, Response, Request, Next, RequestHandler} from "restify";
+import {Server, plugins, Response, Request, Next, RequestHandler} from "restify";
 import {InversifyRestifyServer} from "inversify-restify-utils";
 import kernel from "../config/index";
 import {inject, injectable} from "inversify";
@@ -83,7 +83,7 @@ class HTTPServer implements IHttpServer {
                     next()                    
                 });
 
-                app.use(bodyParser());
+                app.use(plugins.bodyParser());
                 for (let handler of middleware) {
                     app.pre(handler[0])
                 }

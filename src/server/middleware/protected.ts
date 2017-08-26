@@ -2,7 +2,7 @@ import IReq from "../interfaces/req";
 import IRes from "../interfaces/res";
 
 export default function Protected(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<Function>) {
-    const method = descriptor.value;
+    const method = descriptor.value || function() {};
 
     descriptor.value = function(...args: any[]) {
         const req = <IReq> args[0];

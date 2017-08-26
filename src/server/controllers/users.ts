@@ -1,5 +1,5 @@
 import {Next} from "restify";
-import {BadRequestError} from "restify-errors";
+import {BadRequestError, InternalServerError} from "restify-errors";
 import {Post, Get, Controller} from "inversify-restify-utils";
 import {injectable, inject} from "inversify";
 import __, {API_BASE} from "../config/constants";
@@ -40,6 +40,16 @@ class UsersController implements IController {
     @Protected
     @Get('/logout')
     private async logout(req: IReq, res: IRes, next: Next) {
+        if (!req.user) {
+            res.send(500);
+            return next(new InternalServerError('Invalid user'));
+        }
+       
+        if (!req.user.sessionId) {
+            res.send(500);
+            return next(new InternalServerError('Invalid session id'));
+        }
+
         this.sessionService.clearSession(req.user.sessionId);
         res.header('clear-session', 'true');
         return res.redirect('/', next)
@@ -65,11 +75,18 @@ class UsersController implements IController {
         const addUserReq = <IAddUserReq> req.body;
         const emailExists = await this.userService.findByEmail(addUserReq.email);
         if (emailExists) {
-            return next(new BadRequestError('Email already exists'))
+            const err = new BadRequestError('Email already exists')
+            next()
+            return Promise.reject(err)
         }
 
         const id = await this.userService.add(req.body);
-        return await this.userService.findById(id);
+        const user = await this.userService.findById(id);
+        if (!user) {
+            return Promise.reject(new InternalServerError('User not found after add'))
+        }
+
+        return user;
     }
 
     @Post('/empty')
@@ -79,11 +96,13 @@ class UsersController implements IController {
 
     @Validate
     @Post('/authenticate')
-    private async authenticate(req: IReq, res: IRes, next: Next): IAuthenticateUserRes {
+    private async authenticate(req: IReq, res: IRes, next: Next): Promise<IAuthenticateUserRes> {
         const authenticateUserReq = <IAuthenticateUserReq> req.body;
         const user = await this.userService.findByEmail(authenticateUserReq.email);
         if (!user) {
-            return next(new BadRequestError('User not found'))
+            const err = next(new BadRequestError('User not found'))
+            next(err)
+            return Promise.reject(err)
         }
 
         return await this.userService.authenticate(req.body.password, user);

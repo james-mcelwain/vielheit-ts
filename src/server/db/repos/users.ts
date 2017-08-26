@@ -43,7 +43,7 @@ export class Repository {
         return this.db.oneOrNone('SELECT * from Users_View WHERE id = $1', id)
     }
     
-    public async findPasswordHashById(id: number): Promise<{password: string}> {
+    public async findPasswordHashById(id: number): Promise<string> {
         return this.db.oneOrNone('SELECT password from Users where id = $1', id)
     }
 
@@ -51,7 +51,7 @@ export class Repository {
         return this.db.oneOrNone('SELECT * from Users_View WHERE email = $1', email)
     }
 
-    public async all(): Promise<Array<IUser> | null> {
+    public async all(): Promise<Array<IUser>> {
         return this.db.any('SELECT * from Users_View ')
     }
 

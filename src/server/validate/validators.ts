@@ -1,5 +1,5 @@
 import {IsLength, IsEmail} from "validator.ts/decorator/Validation";
-import {IAddUserReq} from "../interfaces/user-service";
+import {IAddUserReq} from "../../domain/request/user";
 
 class UsersController_authenticate {
     @IsEmail()

@@ -1,5 +1,5 @@
 import {injectable, inject} from "inversify";
-import {sign, verify} from "jsonwebtoken";
+import {sign, verify, VerifyOptions, VerifyCallback} from "jsonwebtoken";
 import {readFileSync} from "fs";
 import * as path from "path";
 import {promisify} from "bluebird";
@@ -16,9 +16,9 @@ import {Next} from "restify";
 import User from "../../domain/impl/user";
 import IHTTPServer from "../interfaces/http-server";
 
-const verifyA = promisify(verify);
+const verifyA = promisify(verify as (token: string, secretOrPublicKey: string | Buffer, options?: VerifyOptions, callback?: VerifyCallback) => void);
 
-declare var process:any;
+declare var process: any;
 
 const KEY_FILE = path.resolve(process.env.APP_DIR, 'keys');
 
@@ -54,11 +54,13 @@ class SessionService implements ISessionService{
         }, 0)
     }
 
-    public async getSession(token: string): Promise<string> {
+    public async getSession(token: string): Promise<{ ['session-id']: string }> {
         try {
-            return await verifyA(token, PUBLIC_KEY, { algorithm: 'RS256 '})
-        } catch(e: Error) {
+            const session = await verifyA(token, PUBLIC_KEY, { algorithms: ['RS256'] }) as { ['session-id']: string }
+            return session;
+        } catch(e) {
             this.logger.error(e)
+            return Promise.reject(e);
         }
     }
 

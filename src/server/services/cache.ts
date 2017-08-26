@@ -1,16 +1,21 @@
-import {injectable, inject} from "inversify";
-import {createClient, RedisClient} from "redis";
-import {promisify} from "bluebird";
+import { injectable, inject } from "inversify";
+import * as redis from "redis";
+import { createClient, RedisClient } from "redis";
+import { promisify } from "bluebird";
 import __ from "../config/constants";
 import ILoggerFactory from "../interfaces/logger-factory";
 import ILogger from "../interfaces/logger";
 import ICacheService from "../interfaces/cache-service";
+import * as bluebird from "bluebird";
 
-declare var process:any;
+bluebird.promisifyAll(redis.RedisClient.prototype);
+bluebird.promisifyAll(redis.Multi.prototype);
+
+declare var process: any;
 
 @injectable()
-class CacheService implements ICacheService{
-    private client: RedisClient;
+class CacheService implements ICacheService {
+    private client: AsyncRedisClient;
     private logger: ILogger;
 
     public constructor( @inject(__.LoggerFactory) LoggerFactory: ILoggerFactory) {
@@ -20,61 +25,63 @@ class CacheService implements ICacheService{
     public async onBootstrap() {
         return new Promise((resolve, reject) => {
             this.logger.info('connecting to redis');
-            this.client = createClient();
+            this.client = createClient() as AsyncRedisClient;
 
             setTimeout(() => {
                 reject('failed to connect to redis in 2s')
             }, 2000);
 
-            Reflect.get(this.client, 'on').call(this.client, 'connect', () => {
+            this.client.on('connect', () => {
                 this.logger.info('connected');
                 resolve(true)
             });
-            Reflect.get(this.client, 'on').call(this.client, 'err', (err: Error) => {
+
+            this.client.on('err', (err: Error) => {
                 this.logger.error(err);
                 reject(false)
             });
-            Reflect.get(this.client, 'on').call(this.client, 'reconnecting', (err: Error) =>
+
+            this.client.on('reconnecting', (err: Error) =>
                 this.logger.info(`reconnecting ${err ? 'err=' + err : ''}`));
         })
     }
 
     public async get(key: string): Promise<string> {
-    const time = Date.now();
-        return new Promise((resolve, reject) => {
-            this.client.get(key, (err, value) => {
-                if (err) return reject(err);
+        const time = Date.now();
 
-                const str = <string> value;
+        return this.client.getAsync(key)
+            .then(r => {
                 this.logger.info(`key=${key} time=${Date.now() - time} action=get`);
-                resolve(str)
+                return r
             })
-        })
     }
 
     public async del(key: string): Promise<boolean> {
         const time = Date.now();
-        return new Promise((resolve, reject) => {
-            this.client.del(key, (err) => {
-                if (err) return reject(err);
 
+        return this.client.delAsync(key)
+            .then(r => {
                 this.logger.info(`key=${key} time=${Date.now() - time} action=del`);
-                resolve(true)
+                return r
             })
-        })
     }
 
     public async set(key: string, value: string): Promise<boolean> {
         const time = Date.now();
-        return new Promise((resolve, reject) => {
-            this.client.set(key, value, (err, value) => {
-                if (err) return reject(err);
+
+        return this.set(key, value)
+            .then(r => {
 
                 this.logger.info(`key=${key} time=${Date.now() - time} action=set`);
-                resolve(true)
+                return r
             })
-        })
     }
+}
+
+interface AsyncRedisClient extends RedisClient {
+    getAsync(key: string): Promise<string>
+    delAsync(key: string): Promise<boolean>
+    setAsync(key: string, value: string): Promise<'OK'>
 }
 
 export default CacheService
