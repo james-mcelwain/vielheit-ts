@@ -3,7 +3,7 @@ import {injectable, inject} from "inversify";
 import {hash, compare} from "bcrypt";
 import {Validator} from "validator.ts/Validator";
 import {promisify} from "bluebird";
-import __ from "config/constants";
+import __ from "../config/constants";
 import {IExtensions} from "db";
 import ISessionService from "interfaces/session-service";
 import IUserService from "interfaces/user-service";

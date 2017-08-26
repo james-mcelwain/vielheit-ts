@@ -2,6 +2,7 @@ import IUser from "../user";
 import {ISerializableUser} from "../user";
 
 class User implements IUser {
+    public id: number
     public username: string;
     public fname: string;
     public lname: string;
@@ -10,6 +11,7 @@ class User implements IUser {
     private auth = false;
 
     public constructor(user: IUser) {
+        if (user.id) this.id = user.id
         this.username = user.username;
         this.fname = user.fname;
         this.lname = user.lname;

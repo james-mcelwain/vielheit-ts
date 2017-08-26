@@ -1,4 +1,5 @@
 interface IUser {
+    id?: number
     username: string
     fname: string
     lname: string
@@ -10,6 +11,7 @@ interface IUser {
 }
 
 export interface ISerializableUser {
+    id?: number
     username: string
     fname: string
     lname: string

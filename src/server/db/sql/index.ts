@@ -3,7 +3,7 @@ import * as path from "path";
 
 export class SQL_Helper {
     public static readFile(file: string) {
-        const fullPath: string = path.join('../src/server/db/sql', `${file}.sql`);
+        const fullPath: string = path.resolve(process.env.APP_DIR as string, './src/server/db/sql', `${file}.sql`);
 
         const options = {
             minify: true,
