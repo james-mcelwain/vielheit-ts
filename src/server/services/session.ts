@@ -20,7 +20,7 @@ const verifyA = promisify(verify);
 
 declare var process:any;
 
-const KEY_FILE = path.resolve(process.cwd(), 'keys');
+const KEY_FILE = path.resolve(process.env.APP_DIR, 'keys');
 
 // TODO: CHANGE KEYS
 const PRIVATE_KEY = readFileSync(`${KEY_FILE}/privkey.pem`);
